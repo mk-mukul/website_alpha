@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
+  // Redirect,
 } from "react-router-dom";
 // import Cookies from "js-cookie";
 import "./style/main.css";
@@ -69,9 +69,9 @@ export const App = () => {
           /> */}
 
 
-            <MainRouter exact path="/" />
+            <MainRouter path="/" />
 
-          <Redirect to="/" />
+          {/* <Redirect to="/" /> */}
         </Switch>
       </Router>
     </>
