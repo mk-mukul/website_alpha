@@ -49,8 +49,8 @@ export const AddData = (props) => {
       <AddLink addLink={addLink} />
       <h3>
         Your link is available on{" "}
-        <a href={"/page/" + props.data.user_data.user_name} target="blank">
-          {"/page/" + props.data.user_data.user_name}
+        <a href={process.env.PUBLIC_URL+"/page/" + props.data.user_data.user_name} target="blank">
+          {process.env.PUBLIC_URL+"/page/" + props.data.user_data.user_name}
         </a>
       </h3>
       <Links links={links} onDelete={onDelete} />

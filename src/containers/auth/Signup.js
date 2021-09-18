@@ -67,7 +67,7 @@ export default class Signup extends React.Component {
     return (
       <>
         {this.state.islogin ? (
-          <Redirect to="/signin" />
+          <Redirect to={process.env.PUBLIC_URL+"/signin"} />
         ) : (
           <>
             <section className="main_body">
@@ -134,7 +134,7 @@ export default class Signup extends React.Component {
                     </button>
                   </div>
                 </div>
-                <Link className="form-link" to="/signin">
+                <Link className="form-link" to={process.env.PUBLIC_URL+"/signin"}>
                   Already have an account ?? Login
                 </Link>
               </div>

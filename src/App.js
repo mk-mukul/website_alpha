@@ -16,6 +16,7 @@ import LinkWebsite from "./containers/LinkWebsite";
 
 export const App = () => {
 
+  // console.log(process.env.PUBLIC_URL)
 
 
 
@@ -31,8 +32,8 @@ export const App = () => {
                   </>
                 );
               }}/> */}
-          <Route exact path="/signin" component={Signin} />
-          <Route exact path="/signup" component={Signup} />
+          <Route exact path={process.env.PUBLIC_URL+"/signin"} component={Signin} />
+          <Route exact path={process.env.PUBLIC_URL+"/signup"} component={Signup} />
           {/* <Route exact path="/profile" component={Profile} /> */}
           {/* <Route exact path="/signup" component={Signup} /> */}
           {/* <Route exact path="/home" component={Home} /> */}
@@ -40,7 +41,7 @@ export const App = () => {
 
           <Route
             exact
-            path="/page/:id"
+            path={process.env.PUBLIC_URL+"/page/:id"}
             render={(props) => {
               return (
                 <>
@@ -69,7 +70,7 @@ export const App = () => {
           /> */}
 
 
-            <MainRouter path="/" />
+            <MainRouter path={process.env.PUBLIC_URL+"/"} />
 
           {/* <Redirect to="/" /> */}
         </Switch>

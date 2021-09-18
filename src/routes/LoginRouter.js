@@ -69,14 +69,14 @@ const UserFound = (props) => {
       <Header user_name={data.user.user_name} />
       <section className="main_body">
         <Route
-          path="/"
+          path={process.env.PUBLIC_URL+"/"}
           render={() => {
             return (
               <>
                 <Switch>
                   <Route
                     exact
-                    path="/"
+                    path={process.env.PUBLIC_URL+"/"}
                     render={() => {
                       return (
                         <>
@@ -87,7 +87,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path="/add_data"
+                    path={process.env.PUBLIC_URL+"/add_data"}
                     render={() => {
                       return (
                         <>
@@ -98,7 +98,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path="/profile"
+                    path={process.env.PUBLIC_URL+"/profile"}
                     render={() => {
                       return (
                         <>
@@ -109,7 +109,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path="/inbox"
+                    path={process.env.PUBLIC_URL+"/inbox"}
                     render={() => {
                       return (
                         <>

@@ -16,7 +16,7 @@ export const Profile = (props) => {
         <h4>email : {user.email}</h4>
         <h4>Phone No : {user.phone}</h4>
       </div>
-      <Link to="/">
+      <Link to={process.env.PUBLIC_URL+"/"}>
         <button
           onClick={() => {
             logout();
