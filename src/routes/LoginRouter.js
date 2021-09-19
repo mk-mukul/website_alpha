@@ -41,7 +41,7 @@ export default class LoginRouter extends React.Component {
         loading: false,
         status: res.status,
       });
-      console.log(res.status);
+      // console.log(res.status);
       // console.log(data);
       // console.log(this.state.user);
       // console.log(this.state.data);

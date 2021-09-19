@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  // Redirect,
+  // useLocation,
+  Redirect,
 } from "react-router-dom";
 // import Cookies from "js-cookie";
 import "./style/main.css";
@@ -15,14 +16,15 @@ import LinkWebsite from "./containers/LinkWebsite";
 // import { Profile } from "./containers/Profile";
 
 export const App = () => {
-
   // console.log(process.env.PUBLIC_URL)
-
-
+  let querry = window.location.search.split("?").slice(1, 2).join();
+  // console.log(querry);
+  // console.log(querry2);
 
   return (
     <>
       <Router>
+        {querry ? <Redirect to={process.env.PUBLIC_URL + querry} /> : <></>}
         <Switch>
           {/* <Route exact path="/" render={() => {
                 // console.log(data)
@@ -32,8 +34,16 @@ export const App = () => {
                   </>
                 );
               }}/> */}
-          <Route exact path={process.env.PUBLIC_URL+"/signin"} component={Signin} />
-          <Route exact path={process.env.PUBLIC_URL+"/signup"} component={Signup} />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/signin"}
+            component={Signin}
+          />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/signup"}
+            component={Signup}
+          />
           {/* <Route exact path="/profile" component={Profile} /> */}
           {/* <Route exact path="/signup" component={Signup} /> */}
           {/* <Route exact path="/home" component={Home} /> */}
@@ -41,19 +51,15 @@ export const App = () => {
 
           <Route
             exact
-            path={process.env.PUBLIC_URL+"/page/:id"}
+            path={process.env.PUBLIC_URL + "/page/:id"}
             render={(props) => {
               return (
                 <>
-                  <LinkWebsite
-                    id={props.match.params.id}
-                  />
+                  <LinkWebsite id={props.match.params.id} />
                 </>
               );
             }}
           />
-
-
 
           {/* <Route
             exact
@@ -69,10 +75,9 @@ export const App = () => {
             }}
           /> */}
 
+          <MainRouter path={process.env.PUBLIC_URL + "/"} />
 
-            <MainRouter path={process.env.PUBLIC_URL+"/"} />
-
-          {/* <Redirect to="/" /> */}
+          {/* <Redirect to={process.env.PUBLIC_URL} /> */}
         </Switch>
       </Router>
     </>
