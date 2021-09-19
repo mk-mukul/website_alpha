@@ -1,6 +1,6 @@
 // require("dotenv").config();
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { Header } from "../containers/Header";
 import "../style/header.css";
@@ -17,6 +17,7 @@ export default class LoginRouter extends React.Component {
   state = {
     loading: true,
     data: null,
+    status: null,
   };
 
   // logout = () => {
@@ -38,8 +39,9 @@ export default class LoginRouter extends React.Component {
       this.setState({
         data: data,
         loading: false,
+        status: res.status,
       });
-      // console.log(res);
+      console.log(res.status);
       // console.log(data);
       // console.log(this.state.user);
       // console.log(this.state.data);
@@ -54,7 +56,13 @@ export default class LoginRouter extends React.Component {
         {this.state.loading ? (
           <section className="main_body"> Loading... </section>
         ) : (
-          <UserFound data={this.state.data} token={this.props.token} />
+          <>
+            {this.state.status === 200 ? (
+              <UserFound data={this.state.data} token={this.props.token} />
+              ) : (
+              <Redirect to={process.env.PUBLIC_URL + "/signin"} />
+            )}
+          </>
         )}
       </>
     );
@@ -69,14 +77,14 @@ const UserFound = (props) => {
       <Header user_name={data.user.user_name} />
       <section className="main_body">
         <Route
-          path={process.env.PUBLIC_URL+"/"}
+          path={process.env.PUBLIC_URL + "/"}
           render={() => {
             return (
               <>
                 <Switch>
                   <Route
                     exact
-                    path={process.env.PUBLIC_URL+"/"}
+                    path={process.env.PUBLIC_URL + "/"}
                     render={() => {
                       return (
                         <>
@@ -87,7 +95,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path={process.env.PUBLIC_URL+"/add_data"}
+                    path={process.env.PUBLIC_URL + "/add_data"}
                     render={() => {
                       return (
                         <>
@@ -98,7 +106,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path={process.env.PUBLIC_URL+"/profile"}
+                    path={process.env.PUBLIC_URL + "/profile"}
                     render={() => {
                       return (
                         <>
@@ -109,7 +117,7 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path={process.env.PUBLIC_URL+"/inbox"}
+                    path={process.env.PUBLIC_URL + "/inbox"}
                     render={() => {
                       return (
                         <>
