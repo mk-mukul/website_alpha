@@ -15,9 +15,11 @@ import Signup from "./containers/auth/Signup";
 import LinkWebsite from "./containers/LinkWebsite";
 // import { Profile } from "./containers/Profile";
 
+
 export const App = () => {
   // console.log(process.env.PUBLIC_URL)
-  let querry = window.location.search.split("?").slice(1, 2).join();
+  let querry = window.location.search.split("?/").slice(1, 2).join();
+  // console.log(window.location);
   // console.log(querry);
   // console.log(querry2);
 

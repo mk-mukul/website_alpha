@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-const UPDATE_URL = process.env.REACT_APP_SERVER + "/update";
+const UPDATE_URL = process.env.REACT_APP_SERVER + "/update/link";
 
 // console.log(UPDATE_URL)
 
