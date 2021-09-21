@@ -36,14 +36,16 @@ export const Inbox = (props) => {
   }, []);
 
   useEffect(() => {
-    inMsg && setMeassages((prev) => [...prev, inMsg]);
-  }, [inMsg]);
+    if (inMsg && currentChat === inMsg.name) {
+      setMeassages((prev) => [...prev, inMsg])
+    };
+  }, [inMsg, currentChat]);
 
   useEffect(() => {
     socket.current.emit("addUser", props.user.user_name);
     // console.log(socket)
     socket.current.on("getUsers", (users) => {
-      // console.log(users);
+      console.log(users);
     });
   }, [props.user]);
 
@@ -88,7 +90,7 @@ export const Inbox = (props) => {
       if (chat) {
         window.location.reload();
       }
-    };
+    }
   };
 
   return (
@@ -104,46 +106,41 @@ export const Inbox = (props) => {
                 return <Friend key={ind} data={val} openChat={openChat} />;
               })}
               <div className="addFriend">
-                <input type="text" placeholder="Enter friend's user name"
+                <input
+                  type="text"
+                  placeholder="Enter friend's user name"
                   value={addFrndInp}
                   onChange={(e) => setAddFrndInp(e.currentTarget.value)}
+                   
                 />
-                <button onClick={(e) => { addFriend(e) }}>add</button>
+                <button
+                  onClick={(e) => {
+                    addFriend(e);
+                  }}
+                >
+                  Add friend
+                </button>
               </div>
             </div>
           </div>
           <div className="chat_window">
-            {currentChat ? <>
-              <div className="top"><h2>{currentChat}</h2></div>
-              <div className="chats_display scroll-y" id="scrollBottom">
-                {messages.map((val, ind) => {
-                  return (
-                    //   <div>
-                    <Message
-                      key={ind}
-                      user={props.user.user_name}
-                      data={val}
-                      scrollRef={scrollRef}
-                    />
-                    //   </div>
-                  );
-                })}
-              </div>
-              <form className="send" id="chats-send-container">
-                <input
-                  className="formchat"
-                  type="text"
-                  placeholder=" Message..."
-                  value={msg}
-                  onChange={(e) => setMsg(e.currentTarget.value)}
-                  id="chats-messageInp"
-                  onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
-                />
-                <button className="btn" id="chats-btn" onClick={(e) => { submit(e); }}>Send</button>
-              </form></>
-              :
-              <><span className="noCurrentChat">open a chat</span></>
-            }
+            {currentChat ? (
+              <>
+              <ChatWindow
+              currentChat= {currentChat}
+              messages={messages}
+              scrollRef={scrollRef}
+              user={props.user.user_name}
+              msg={msg}
+              setMsg={setMsg}
+              submit={submit}
+              />
+              </>
+            ) : (
+              <>
+                <span className="noCurrentChat">open a chat</span>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -151,15 +148,54 @@ export const Inbox = (props) => {
   );
 };
 
-
-
-
-
+const ChatWindow = (props) => {
+  return (
+    <>
+      <div className="top">
+        <h2>{props.currentChat}</h2>
+      </div>
+      <div className="chats_display scroll-y" id="scrollBottom">
+        {props.messages.map((val, ind) => {
+          return (
+            //   <div>
+            <Message
+              key={ind}
+              user={props.user}
+              data={val}
+              scrollRef={props.scrollRef}
+            />
+            //   </div>
+          );
+        })}
+      </div>
+      <form className="send" id="chats-send-container">
+        <input
+          className="formchat"
+          type="text"
+          placeholder=" Message..."
+          value={props.msg}
+          onChange={(e) => props.setMsg(e.currentTarget.value)}
+          id="chats-messageInp"
+          onKeyDownCapture={(e) => (e.key === "Enter" ? props.submit(e) : null)}
+        />
+        <button
+          className="btn"
+          id="chats-btn"
+          onClick={(e) => {
+            props.submit(e);
+          }}
+        >
+          Send
+        </button>
+      </form>
+    </>
+  );
+};
 
 const updateChat = async (to_user_name, message) => {
   const token = Cookies.get("token");
   try {
-    // const res = 
+    // const res =
     await fetch(SEND_URL, {
       method: "POST",
       headers: {
@@ -179,7 +215,6 @@ const updateChat = async (to_user_name, message) => {
     alert("Something went wrong");
   }
 };
-
 
 const getChat = async (chat_id) => {
   const token = Cookies.get("token");
@@ -204,12 +239,15 @@ const getChat = async (chat_id) => {
   }
 };
 
-
 const Friend = (props) => {
   // console.log(props.data.to_user_name);
   return (
     <>
-      <div onClick={() => { props.openChat(props.data.to_user_name); }}>
+      <div
+        onClick={() => {
+          props.openChat(props.data.to_user_name);
+        }}
+      >
         <div className="chat">
           <h2>{props.data.to_user_name}</h2>
         </div>

@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 const UPDATE_URL = process.env.REACT_APP_SERVER + "/update/link";
 
 // console.log(UPDATE_URL)
+// console.log(process.env.PUBLIC_URL)
 
 let firstRun = true;
 let initLinks = [];

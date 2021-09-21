@@ -19,10 +19,10 @@ export const Header = (props) => {
             <NavLink to={process.env.PUBLIC_URL+"/"}>
               <h3>Home</h3>
             </NavLink>
-            <NavLink to={process.env.PUBLIC_URL+"/inbox"} params={{ data: props.user_name }}>
+            <NavLink to={process.env.PUBLIC_URL+"/inbox/"} params={{ data: props.user_name }}>
               <h3>Inbox</h3>
             </NavLink>
-            <NavLink to={process.env.PUBLIC_URL+"/profile"}>
+            <NavLink to={process.env.PUBLIC_URL+"/profile/"}>
               <h3>{props.user_name}</h3>
             </NavLink>
           </div>

@@ -6,7 +6,7 @@ import { Redirect, Link } from "react-router-dom";
 
 // import "fetch"
 
-const URL = process.env.REACT_APP_SERVER+"/signin";
+const URL = process.env.REACT_APP_SERVER + "/signin";
 // console.log(URL)
 
 export default class Signin extends React.Component {
@@ -18,7 +18,6 @@ export default class Signin extends React.Component {
   };
   submit = async () => {
     const res = await fetch(URL, {
-
       // login
       method: "POST",
       headers: {
@@ -46,7 +45,7 @@ export default class Signin extends React.Component {
     return (
       <>
         {this.state.islogin ? (
-          <Redirect to={process.env.PUBLIC_URL+"/"} />
+          <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
         ) : (
           <>
             <section className="main_body">
@@ -71,6 +70,9 @@ export default class Signin extends React.Component {
                       onChange={(e) => {
                         this.setState({ password: e.target.value });
                       }}
+                      onKeyDownCapture={(e) =>
+                        e.key === "Enter" ? this.submit(e) : null
+                      }
                     />
                   </div>
                   <div className="form-cell">
@@ -83,7 +85,10 @@ export default class Signin extends React.Component {
                     </button>
                   </div>
                 </div>
-                <Link className="form-link" to={process.env.PUBLIC_URL+"/signup"}>
+                <Link
+                  className="form-link"
+                  to={process.env.PUBLIC_URL + "/signup/"}
+                >
                   Click to make an account
                 </Link>
               </div>

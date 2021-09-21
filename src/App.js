@@ -38,12 +38,12 @@ export const App = () => {
               }}/> */}
           <Route
             exact
-            path={process.env.PUBLIC_URL + "/signin"}
+            path={process.env.PUBLIC_URL + "/signin/"}
             component={Signin}
           />
           <Route
             exact
-            path={process.env.PUBLIC_URL + "/signup"}
+            path={process.env.PUBLIC_URL + "/signup/"}
             component={Signup}
           />
           {/* <Route exact path="/profile" component={Profile} /> */}

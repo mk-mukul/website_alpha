@@ -4,36 +4,25 @@
   margin-top: 70px;
   width: 100%;
   height: calc(100vh - 70px);
-  /* padding: 10vh 0 0; */
-  /* height: 75vh; */
 }
 .chats_page .partition {
-  /* display: block;
-  margin: auto; */
-  min-height: 400px;
-  /* height: 100%; */
-  /* width: 100%; */
-  /* border-radius: 10px; */
+  /* min-height: 400px; */
   overflow-y: auto;
   display: flex;
-  /* justify-content: center; */
-  /* margin-bottom: 24px; */
-  /* padding: 5rem 0 0; */
+
 }
 
 .user_name {
   padding: 10px 0;
-  background-color: rgb(219, 212, 212);
+  background-color: #4c4c6dc7;
+  color: #ffffff;
   display: grid;
   justify-content: center;
 }
 
 .chat_list {
   flex: 1;
-  background-color: #cdd9f8;
-  /* padding-top: 10vh;
-  height: 90vh; */
-  /* width: 100vw; */
+  background-color: #4c4c6d9a;
   display: flex;
   flex-direction: column;
   /* background-image: linear-gradient(#a32100, #00a2a8); */
@@ -43,7 +32,7 @@
   height: 100%;
 }
 .chat {
-  background-color: #f8f8f8;
+  background-color: #ffffffcb;
   margin-top: 0.1rem;
   padding: 0.4rem;
   display: flex;
@@ -60,11 +49,12 @@
   display: flex;
   flex-direction: column;
   /* background-color: #2c0025; */
-  background-image: linear-gradient(#0018a3, #9500a8);
+  background-image: linear-gradient(#402662, #3900a6);
+  /* background-image: linear-gradient(#699ff6, #000066); */
 }
 
 .chat_window .top {
-  background-color: #858585;
+  background-color: #4C4C6D;
   color: #ffffff;
   padding: 10px;
   display: flex;
@@ -92,15 +82,14 @@
 }
 
 .message_label {
-  color: #dfeeea7e;
+  color: #ffffff57;
   font-size: 0.8rem;
 }
 
 .message {
-  padding: 0;
-  margin: 0;
   /* background-color: #ac5757; */
-  padding: 10px;
+  margin: 0;
+  padding: 10px 16px;
   border-radius: 19.2px;
 }
 .left {
@@ -108,8 +97,8 @@
   clear: both;
 }
 .message_left {
-  background-color: #7952b3;
-  color: #dfeeea;
+  background-color: #ffffff23;
+  color: #ffffffe1;
   margin-top: 2px;
 }
 .right {
@@ -117,8 +106,8 @@
   clear: both;
 }
 .message_right {
-  background-color: #c8c6c6;
-  color: #293b5f;
+  background-color: #ffffffb6;
+  color: #4C4C6D;
 }
 .middle {
   /* background-color: #73f3e2; */
@@ -171,4 +160,18 @@
   margin: 0.2rem 0;
   box-decoration-break: unset;
   border: 0;
+}
+
+
+@media (max-width: 600px){
+  header {
+    display: none;
+  }
+  .chats_page{
+    height: 100vh;
+    margin: 0;
+  }
+  .chat_window{
+    min-width: 100vw;
+  }
 }

@@ -2,8 +2,9 @@ body {
   padding: 0;
   margin: 0;
   /* min-height: 100vh; */
-  color: #557174;
-  background-color: #F7F7E8;
+  color: #4C4C6D;
+  background-color: #E8F6EF;
+  /* background-image: linear-gradient(#038a9c, #a30296); */
 }
 .main_body {
   /* min-height: 100vh; */
@@ -37,7 +38,7 @@ h2 {
 .form-cell input {
   padding: 0.2rem;
   margin: 0 0.4rem;
-  border: 2px solid #557174;
+  border: 2px solid #4C4C6D;
   border-radius: 3px;
 }
 
@@ -52,8 +53,8 @@ input:hover, button:focus {
 
 button {
   /* color: blue; */
-  background-color: #9DAD7F;
-  border: 1px solid #557174;
+  background-color: #4C4C6D;
+  border: 1px solid #4C4C6D;
   border-radius: 6px;
   padding: 0.2rem 2rem;
   justify-self: center;
