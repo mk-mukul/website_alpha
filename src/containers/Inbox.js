@@ -19,6 +19,7 @@ export const Inbox = (props) => {
 
   const [msg, setMsg] = useState("");
   const [currentChat, setCurrentChat] = useState(null);
+  const [addFrndInp, setAddFrndInp] = useState("");
   const [inMsg, setInMsg] = useState(null);
   const [messages, setMeassages] = useState([]);
   const socket = useRef();
@@ -79,6 +80,17 @@ export const Inbox = (props) => {
     setMeassages(messages);
   };
 
+  const addFriend = async (e) => {
+    e.preventDefault();
+    if (addFrndInp) {
+      console.log(addFrndInp);
+      const chat = await getChat(addFrndInp);
+      if (chat) {
+        window.location.reload();
+      }
+    };
+  };
+
   return (
     <>
       <section className="chats_page">
@@ -87,42 +99,51 @@ export const Inbox = (props) => {
             <div className="user_name">
               <h2>{props.user.user_name}</h2>
             </div>
-            <div className="chat_wrapper">
+            <div className="chat_wrapper scroll-y">
               {props.user.chats_id.map((val, ind) => {
                 return <Friend key={ind} data={val} openChat={openChat} />;
               })}
+              <div className="addFriend">
+                <input type="text" placeholder="Enter friend's user name"
+                  value={addFrndInp}
+                  onChange={(e) => setAddFrndInp(e.currentTarget.value)}
+                />
+                <button onClick={(e) => { addFriend(e) }}>add</button>
+              </div>
             </div>
           </div>
           <div className="chat_window">
-            <div className="chats_display scroll-y" id="scrollBottom">
-              {/* <div className="message right">Rohan: Hey how are you?</div>
-                        <div className="message left">Harry: I am fine rohan.fasdasfa sdsaffsafsdfa sdfasfdsfasdfasdfasfas dfasd</div> */}
-              {messages.map((val, ind) => {
-                return (
-                  //   <div>
-                  <Message
-                    key={ind}
-                    user={props.user.user_name}
-                    data={val}
-                    scrollRef={scrollRef}
-                  />
-                  //   </div>
-                );
-              })}
-            </div>
-
-            <form className="send" id="chats-send-container">
-              <input
-                className="formchat"
-                type="text"
-                placeholder=" Message..."
-                value={msg}
-                onChange={(e) => setMsg(e.currentTarget.value)}
-                id="chats-messageInp"
-                onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
-              />
-              <button className="btn" id="chats-btn" onClick={(e) =>{submit(e);}}>Send</button>
-            </form>
+            {currentChat ? <>
+              <div className="top"><h2>{currentChat}</h2></div>
+              <div className="chats_display scroll-y" id="scrollBottom">
+                {messages.map((val, ind) => {
+                  return (
+                    //   <div>
+                    <Message
+                      key={ind}
+                      user={props.user.user_name}
+                      data={val}
+                      scrollRef={scrollRef}
+                    />
+                    //   </div>
+                  );
+                })}
+              </div>
+              <form className="send" id="chats-send-container">
+                <input
+                  className="formchat"
+                  type="text"
+                  placeholder=" Message..."
+                  value={msg}
+                  onChange={(e) => setMsg(e.currentTarget.value)}
+                  id="chats-messageInp"
+                  onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
+                />
+                <button className="btn" id="chats-btn" onClick={(e) => { submit(e); }}>Send</button>
+              </form></>
+              :
+              <><span className="noCurrentChat">open a chat</span></>
+            }
           </div>
         </div>
       </section>
@@ -179,7 +200,7 @@ const getChat = async (chat_id) => {
     return messages;
   } catch (err) {
     console.log(err);
-    alert("Something went wrong");
+    alert("user not found");
   }
 };
 
@@ -188,7 +209,7 @@ const Friend = (props) => {
   // console.log(props.data.to_user_name);
   return (
     <>
-      <div onClick={() => {props.openChat(props.data.to_user_name);}}>
+      <div onClick={() => { props.openChat(props.data.to_user_name); }}>
         <div className="chat">
           <h2>{props.data.to_user_name}</h2>
         </div>
