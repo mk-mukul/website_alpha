@@ -11,6 +11,7 @@ export const MainRouter = () =>{
     return(<> 
         {token ? 
         <>
+        <Redirect to={process.env.PUBLIC_URL+"/inbox/"} />
         <LoginRouter token={token}/> 
         </>
         :

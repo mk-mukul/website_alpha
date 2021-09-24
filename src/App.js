@@ -1,3 +1,11 @@
+// import "./style/main.css";
+// import "./style/header.css";
+// import "./style/home.css";
+// import "./style/link_page.css";
+import "./style/chats.css";
+
+
+
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -7,7 +15,6 @@ import {
   Redirect,
 } from "react-router-dom";
 // import Cookies from "js-cookie";
-import "./style/main.css";
 import { MainRouter } from "./routes/MainRouter";
 import Signin from "./containers/auth/Signin";
 import Signup from "./containers/auth/Signup";

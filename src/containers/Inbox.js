@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { io } from "socket.io-client";
 // import { animateScroll } from 'react-scroll'
 
-import "../style/chats.css";
+// import "../style/chats.css";
 import "../script/chats";
 
 const URL = process.env.REACT_APP_SERVER;

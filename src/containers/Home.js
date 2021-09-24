@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 // import { Route, Switch} from "react-router-dom";
 // import Cookies from "js-cookie";
 // import { Header } from "./Header";
-import "../style/header.css";
+// import "../style/header.css";
 // import { LinkPage } from "./LinkPage";
-import "../style/home.css";
+// import "../style/home.css";
 // import { Profile } from "./Profile";
 
 

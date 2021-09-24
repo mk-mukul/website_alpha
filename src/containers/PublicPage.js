@@ -1,5 +1,5 @@
 
-import "../style/link_page.css"
+// import "../style/link_page.css"
 import "../script/link_page"
 
 
