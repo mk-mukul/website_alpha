@@ -15,23 +15,23 @@ export const Home = (props) => {
   const user = props.data.user;
   const data = props.data.user_data;
   // console.log(data)
-  return (<>
+  return (<div>
 
-    <div className="">
+    <div className="mt-16">
       <h1>Hello {user.name}</h1>
       <h2> Welcome to the Website Alpha</h2>
     </div>
     <div>
       {data.data[0] ?
       <>
-      <h3>Your link is available <a href={process.env.PUBLIC_URL+"/page/"+data.user_name}>Here</a></h3>
+      <p>Your link is available <a href={process.env.PUBLIC_URL+"/page/"+data.user_name}>Here</a></p>
       <Link to={process.env.PUBLIC_URL+"/add_data/"} params={{data: data}} ><button>Add Links</button></Link>
       </>
       :
       <>
-      <h3>You have not saved anything yet</h3>
+      <p>You have not saved anything yet</p>
       <Link to={process.env.PUBLIC_URL+"/add_data/"} params={{data: data}} ><button>Add Links</button></Link>
       </>}
     </div>
-  </>)
+  </div>)
 }

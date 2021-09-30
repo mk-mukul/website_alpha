@@ -17,7 +17,7 @@ export const AddData = (props) => {
   if (firstRun) {
     // console.log("first run")
     initLinks = props.data.user_data.data;
-    firstRun = false
+    firstRun = false;
   }
 
   const onDelete = (link) => {
@@ -46,23 +46,28 @@ export const AddData = (props) => {
   }, [links]);
 
   return (
-    <>
+    <div className="mt-16 grid justify-center justify-items-center">
       <AddLink addLink={addLink} />
       <h3>
         Your link is available on{" "}
-        <a href={process.env.PUBLIC_URL+"/page/" + props.data.user_data.user_name} target="blank">
-          {process.env.PUBLIC_URL+"/page/" + props.data.user_data.user_name}
+        <a
+          href={
+            process.env.PUBLIC_URL + "/page/" + props.data.user_data.user_name
+          }
+          target="blank"
+        >
+          {process.env.PUBLIC_URL + "/page/" + props.data.user_data.user_name}
         </a>
       </h3>
       <Links links={links} onDelete={onDelete} />
-    </>
+    </div>
   );
 };
 
 const update = async (links) => {
   const token = Cookies.get("token");
   try {
-    // const res = 
+    // const res =
     await fetch(UPDATE_URL, {
       method: "POST",
       headers: {
@@ -87,7 +92,7 @@ const update = async (links) => {
 const Links = (props) => {
   return (
     <>
-      <div>
+      <div className="grid justify-center justify-items-center">
         <h3>Your Links</h3>
         {props.links.length === 0
           ? "No links to display"
@@ -104,18 +109,22 @@ const Links = (props) => {
 const OneLink = ({ link, onDelete }) => {
   return (
     <>
-      <div>
-        <h3>{link.title}</h3>
-        <a href={link.link} target="blank">
-          {link.link}
-        </a>
-        <button
-          onClick={() => {
-            onDelete(link);
-          }}
-        >
-          Delete
-        </button>
+      <div className="grid justify-items-center pt-5">
+        <div className="flex flex-wrap">
+          <h3 className="mx-2">{link.title}</h3>
+          <button
+            onClick={() => {
+              onDelete(link);
+            }}
+          >
+            Delete
+          </button>
+        </div>
+        <p>
+          <a href={link.link} target="blank">
+            {link.link}
+          </a>
+        </p>
       </div>
     </>
   );

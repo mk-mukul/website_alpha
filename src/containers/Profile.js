@@ -9,7 +9,7 @@ export const Profile = (props) => {
   // console.log(user);
   return (
     <>
-      <div>
+      <div className="mt-16">
         <h1> Login Successful </h1>
         <h4>Name : {user.name}</h4>
         <h4>User Name : {user.user_name}</h4>

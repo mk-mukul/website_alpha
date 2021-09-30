@@ -2,3 +2,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* base style */
+@layer base{
+    #root{
+        @apply min-h-screen bg-mukul-100
+    }
+    a{
+        @apply text-blue-700
+    }
+    h1{
+        @apply text-3xl
+    }
+    h2{
+        @apply text-2xl
+    }
+    h3{
+        @apply text-xl
+    }
+    button{
+        @apply border-2 rounded-md px-2 py-0.5 bg-mukul-400 text-white
+    }
+    input{
+        @apply border-2 px-1 py-0.5 text-sm
+    }
+    
+}
+
+
+.message_box {
+    min-width: 38.4px;
+    max-width: 70%;
+    margin: 4px 10px;
+  }
+
+

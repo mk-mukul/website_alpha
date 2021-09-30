@@ -1,8 +1,8 @@
 // import "./style/main.css";
 // import "./style/header.css";
 // import "./style/home.css";
-// import "./style/link_page.css";
-import "./style/chats.css";
+import "./style/link_page.css";
+// import "./style/chats.css";
 
 
 
@@ -21,6 +21,7 @@ import Signup from "./containers/auth/Signup";
 // import Home from "./containers/Home";
 import LinkWebsite from "./containers/LinkWebsite";
 // import { Profile } from "./containers/Profile";
+import { Test } from "./containers/Test";
 
 
 export const App = () => {
@@ -65,6 +66,17 @@ export const App = () => {
               return (
                 <>
                   <LinkWebsite id={props.match.params.id} />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/test/"}
+            render={(props) => {
+              return (
+                <>
+                  <Test/>
                 </>
               );
             }}

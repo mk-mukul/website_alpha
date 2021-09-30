@@ -74,8 +74,8 @@ const UserFound = (props) => {
   const data = props.data;
   return (
     <>
-      <Header user_name={data.user.user_name} />
-      <section className="main_body">
+      <Header user_name={data.user.user_name} className="z-10" />
+      <section className="grid justify-center align-middle h-full bg-mukul-100">
         <Route
           path={process.env.PUBLIC_URL + "/"}
           render={() => {

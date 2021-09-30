@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 
 // import { Link } from "react-router-dom";
 
@@ -8,6 +9,7 @@ import { io } from "socket.io-client";
 
 // import "../style/chats.css";
 import "../script/chats";
+// import { Link } from "react-router-dom";
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
@@ -37,15 +39,15 @@ export const Inbox = (props) => {
 
   useEffect(() => {
     if (inMsg && currentChat === inMsg.name) {
-      setMeassages((prev) => [...prev, inMsg])
-    };
+      setMeassages((prev) => [...prev, inMsg]);
+    }
   }, [inMsg, currentChat]);
 
   useEffect(() => {
     socket.current.emit("addUser", props.user.user_name);
     // console.log(socket)
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      // console.log(users);
     });
   }, [props.user]);
 
@@ -74,13 +76,21 @@ export const Inbox = (props) => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const [chat_window, setChat_windoe] = useState("hidden")
+  const [chat_list, setChat_list] = useState("flex")
   const openChat = async (user_name) => {
-    // console.log("open chat run");
     const messages = await getChat(user_name);
     setCurrentChat(user_name);
-    // console.log(messages);
+    setChat_windoe("flex");
+    setChat_list("hidden");
     setMeassages(messages);
   };
+  const back = () =>{
+    // console.log("i am back")
+    setChat_windoe("hidden");
+    setChat_list("flex");
+  }
+
 
   const addFriend = async (e) => {
     e.preventDefault();
@@ -95,25 +105,25 @@ export const Inbox = (props) => {
 
   return (
     <>
-      <section className="chats_page">
-        <div className="partition">
-          <div className="chat_list">
-            <div className="user_name">
+      <section className="flex sm:pt-16 h-screen justify-center">
+        <div className="flex h-full border-2 rounded-lg">
+          <div className={ chat_list+" chat_list mt-16 sm:mt-0 w-screen sm:w-auto bg-gray-500 sm:flex flex-col"}>
+            <div className="grid justify-center bg-gray-700 text-white px-1 py-3">
               <h2>{props.user.user_name}</h2>
             </div>
-            <div className="chat_wrapper scroll-y">
+            <div className="overflow-y-auto">
               {props.user.chats_id.map((val, ind) => {
                 return <Friend key={ind} data={val} openChat={openChat} />;
               })}
-              <div className="addFriend">
+              <div className="flex flex-col m-1">
                 <input
                   type="text"
                   placeholder="Enter friend's user name"
                   value={addFrndInp}
                   onChange={(e) => setAddFrndInp(e.currentTarget.value)}
-                   
                 />
                 <button
+                  className="m-1"
                   onClick={(e) => {
                     addFriend(e);
                   }}
@@ -123,22 +133,25 @@ export const Inbox = (props) => {
               </div>
             </div>
           </div>
-          <div className="chat_window">
+          <div className={chat_window+" sm:flex h-screen sm:h-auto z-50 sm:z-0 flex-col w-screen sm:w-96 bg-blue-600"}>
             {currentChat ? (
               <>
-              <ChatWindow
-              currentChat= {currentChat}
-              messages={messages}
-              scrollRef={scrollRef}
-              user={props.user.user_name}
-              msg={msg}
-              setMsg={setMsg}
-              submit={submit}
-              />
+                <ChatWindow
+                  currentChat={currentChat}
+                  messages={messages}
+                  scrollRef={scrollRef}
+                  user={props.user.user_name}
+                  msg={msg}
+                  setMsg={setMsg}
+                  submit={submit}
+                  back={back}
+                />
               </>
             ) : (
               <>
-                <span className="noCurrentChat">open a chat</span>
+                <span className="flex justify-center text-6xl mt-16 text-white p-3 opacity-50 cursor-default">
+                  open a chat
+                </span>
               </>
             )}
           </div>
@@ -149,12 +162,16 @@ export const Inbox = (props) => {
 };
 
 const ChatWindow = (props) => {
+
   return (
     <>
-      <div className="top">
+      <div className="flex justify-center p-3 bg-gray-700 opacity-90 text-white">
+        <div onClick={()=>{props.back()}} className="sm:hidden absolute left-3 text-white cursor-pointer">
+          <ArrowBackIosNewRoundedIcon />
+        </div>
         <h2>{props.currentChat}</h2>
       </div>
-      <div className="chats_display scroll-y" id="scrollBottom">
+      <div className="flex-grow overflow-y-auto" id="scrollBottom">
         {props.messages.map((val, ind) => {
           return (
             //   <div>
@@ -168,9 +185,9 @@ const ChatWindow = (props) => {
           );
         })}
       </div>
-      <form className="send" id="chats-send-container">
+      <form className="flex h-12" id="chats-send-container">
         <input
-          className="formchat"
+          className="w-full p-2.5"
           type="text"
           placeholder=" Message..."
           value={props.msg}
@@ -179,7 +196,7 @@ const ChatWindow = (props) => {
           onKeyDownCapture={(e) => (e.key === "Enter" ? props.submit(e) : null)}
         />
         <button
-          className="btn"
+          className="px-4 border-none rounded-none"
           id="chats-btn"
           onClick={(e) => {
             props.submit(e);
@@ -248,8 +265,8 @@ const Friend = (props) => {
           props.openChat(props.data.to_user_name);
         }}
       >
-        <div className="chat">
-          <h2>{props.data.to_user_name}</h2>
+        <div className="flex sm:justify-center cursor-pointer mt-0.5 px-4 py-2 bg-gray-300">
+          <h3>{props.data.to_user_name}</h3>
         </div>
       </div>
     </>
@@ -259,17 +276,24 @@ const Friend = (props) => {
 const Message = (props) => {
   let name = "";
   let classes = "middle";
+  let classes2 = "";
   if (props.data.name) {
     name = props.data.name === props.user ? "" : props.data.name;
-    classes = props.data.name === props.user ? "right" : "left";
+    classes =
+      props.data.name === props.user
+        ? "float-right clear-both"
+        : "float-left clear-both";
+    classes2 = props.data.name === props.user ? "bg-gray-300" : "bg-white";
   }
 
   // console.log(classes)
   return (
     <>
       <div ref={props.scrollRef} className={"message_box " + classes}>
-        <label className="message_label">{name}</label>
-        <p className={"message message_" + classes}>{props.data.message}</p>
+        <label className="text-sm text-white opacity-40">{name}</label>
+        <p className={"px-3.5 py-1.5 rounded-xl " + classes2}>
+          {props.data.message}
+        </p>
       </div>
     </>
   );
