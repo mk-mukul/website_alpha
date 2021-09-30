@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-
+import { format } from "timeago.js";
+// import TimeAgo from "timeago-react";
 // import { Link } from "react-router-dom";
 
 import { io } from "socket.io-client";
@@ -23,6 +24,7 @@ export const Inbox = (props) => {
   const [currentChat, setCurrentChat] = useState(null);
   const [addFrndInp, setAddFrndInp] = useState("");
   const [inMsg, setInMsg] = useState(null);
+  const [inMsgLive, setInMsgLive] = useState("");
   const [messages, setMeassages] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
@@ -33,9 +35,24 @@ export const Inbox = (props) => {
       setInMsg({
         message: data.message,
         name: data.from_user_name,
+        time: data.time,
       });
+      setInMsgLive(null);
+    });
+    socket.current.on("getMsgLive", (data) => {
+      setInMsgLive(data.message);
     });
   }, []);
+
+  useEffect(() => {
+    const to_user_name = currentChat;
+    // console.log(to_user_name)
+    socket.current.emit("sendMsgLive", {
+      from_user_name: props.user.user_name,
+      to_user_name: to_user_name,
+      message: msg,
+    });
+  }, [msg, currentChat, props.user.user_name]);
 
   useEffect(() => {
     if (inMsg && currentChat === inMsg.name) {
@@ -59,11 +76,13 @@ export const Inbox = (props) => {
         from_user_name: props.user.user_name,
         to_user_name: to_user_name,
         message: msg,
+        time: new Date(),
       });
 
       const data = {
         message: msg,
         name: props.user.user_name,
+        time: new Date(),
       };
       updateChat(currentChat, data);
       setMeassages([...messages, data]);
@@ -74,10 +93,10 @@ export const Inbox = (props) => {
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, inMsgLive]);
 
-  const [chat_window, setChat_windoe] = useState("hidden")
-  const [chat_list, setChat_list] = useState("flex")
+  const [chat_window, setChat_windoe] = useState("hidden");
+  const [chat_list, setChat_list] = useState("flex");
   const openChat = async (user_name) => {
     const messages = await getChat(user_name);
     setCurrentChat(user_name);
@@ -85,12 +104,11 @@ export const Inbox = (props) => {
     setChat_list("hidden");
     setMeassages(messages);
   };
-  const back = () =>{
+  const back = () => {
     // console.log("i am back")
     setChat_windoe("hidden");
     setChat_list("flex");
-  }
-
+  };
 
   const addFriend = async (e) => {
     e.preventDefault();
@@ -106,8 +124,13 @@ export const Inbox = (props) => {
   return (
     <>
       <section className="flex sm:pt-16 h-screen justify-center">
-        <div className="flex h-full border-2 rounded-lg">
-          <div className={ chat_list+" chat_list mt-16 sm:mt-0 w-screen sm:w-auto bg-gray-500 sm:flex flex-col"}>
+        <div className="flex h-full sm:border-2 rounded-lg">
+          <div
+            className={
+              chat_list +
+              " chat_list mt-16 sm:mt-0 w-screen sm:w-auto bg-gray-500 sm:flex flex-col"
+            }
+          >
             <div className="grid justify-center bg-gray-700 text-white px-1 py-3">
               <h2>{props.user.user_name}</h2>
             </div>
@@ -133,7 +156,12 @@ export const Inbox = (props) => {
               </div>
             </div>
           </div>
-          <div className={chat_window+" sm:flex h-screen sm:h-auto z-50 sm:z-0 flex-col w-screen sm:w-96 bg-blue-600"}>
+          <div
+            className={
+              chat_window +
+              " sm:flex h-screen sm:h-auto z-50 sm:z-0 flex-col w-screen sm:w-96 bg-blue-600"
+            }
+          >
             {currentChat ? (
               <>
                 <ChatWindow
@@ -145,6 +173,7 @@ export const Inbox = (props) => {
                   setMsg={setMsg}
                   submit={submit}
                   back={back}
+                  inMsgLive={inMsgLive}
                 />
               </>
             ) : (
@@ -161,17 +190,82 @@ export const Inbox = (props) => {
   );
 };
 
-const ChatWindow = (props) => {
+const Message = (props) => {
+  let name = "";
+  let classes = "middle";
+  let classes2 = "";
+  if (props.data) {
+    name = props.own ? "" : props.data.name;
+    classes = props.own ? "float-right clear-both" : "float-left clear-both";
+    classes2 = props.own ? "bg-gray-300" : "bg-white";
+  }
 
   return (
     <>
-      <div className="flex justify-center p-3 bg-gray-700 opacity-90 text-white">
-        <div onClick={()=>{props.back()}} className="sm:hidden absolute left-3 text-white cursor-pointer">
+      {props.data ? (
+        <div ref={props.scrollRef} className={"message_box " + classes}>
+          <label className="text-xs text-white opacity-40">{name}</label>
+          <div
+            className={"overflow-x-hidden px-3.5 py-1.5 rounded-xl " + classes2}
+          >
+            {props.data.message}
+            <br />
+            {/* <TimeAgo date={props.data.time} /> */}
+          </div>
+          <p
+            className={
+              props.own
+                ? "justify-end flex text-xs p-0 m-0"
+                : "justify-start flex text-xsm p-0 m-0"
+            }
+          >
+            <span className="text-white opacity-80">
+              {props.data.time ? format(props.data.time) : ""}
+            </span>
+          </p>
+        </div>
+      ) : (
+        <div ref={props.scrollRef} className={"message_box float-left clear-both"}>
+          <label className="text-xs text-white opacity-40">{props.friend}</label>
+          <div
+            className={"overflow-x-hidden px-3.5 py-1.5 rounded-xl bg-gray-200"}
+          >
+            {props.inMsgLive}
+            <br />
+            {/* <TimeAgo date={props.data.time} /> */}
+          </div>
+          <p
+            className={
+              props.own
+                ? "justify-end flex text-xs p-0 m-0"
+                : "justify-start flex text-xsm p-0 m-0"
+            }
+          >
+            <span className="text-white opacity-80">
+              {props.inMsgLive ? "typing..." : ""}
+            </span>
+          </p>
+        </div>
+      )}
+    </>
+  );
+};
+
+const ChatWindow = (props) => {
+  return (
+    <>
+      <div className="fixed w-full z-10 sm:w-96 flex justify-center p-3 bg-gray-700 text-white">
+        <div
+          onClick={() => {
+            props.back();
+          }}
+          className="sm:hidden absolute left-3 text-white cursor-pointer"
+        >
           <ArrowBackIosNewRoundedIcon />
         </div>
         <h2>{props.currentChat}</h2>
       </div>
-      <div className="flex-grow overflow-y-auto" id="scrollBottom">
+      <div className="flex-grow pt-16 overflow-y-auto" id="scrollBottom">
         {props.messages.map((val, ind) => {
           return (
             //   <div>
@@ -179,15 +273,27 @@ const ChatWindow = (props) => {
               key={ind}
               user={props.user}
               data={val}
+              own={props.user === val.name}
               scrollRef={props.scrollRef}
             />
             //   </div>
           );
         })}
+        {props.inMsgLive ? (
+          <>
+            <Message
+              friend={props.currentChat}
+              inMsgLive={props.inMsgLive}
+              scrollRef={props.scrollRef}
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </div>
       <form className="flex h-12" id="chats-send-container">
         <input
-          className="w-full p-2.5"
+          className="flex-grow p-2.5"
           type="text"
           placeholder=" Message..."
           value={props.msg}
@@ -268,32 +374,6 @@ const Friend = (props) => {
         <div className="flex sm:justify-center cursor-pointer mt-0.5 px-4 py-2 bg-gray-300">
           <h3>{props.data.to_user_name}</h3>
         </div>
-      </div>
-    </>
-  );
-};
-
-const Message = (props) => {
-  let name = "";
-  let classes = "middle";
-  let classes2 = "";
-  if (props.data.name) {
-    name = props.data.name === props.user ? "" : props.data.name;
-    classes =
-      props.data.name === props.user
-        ? "float-right clear-both"
-        : "float-left clear-both";
-    classes2 = props.data.name === props.user ? "bg-gray-300" : "bg-white";
-  }
-
-  // console.log(classes)
-  return (
-    <>
-      <div ref={props.scrollRef} className={"message_box " + classes}>
-        <label className="text-sm text-white opacity-40">{name}</label>
-        <p className={"px-3.5 py-1.5 rounded-xl " + classes2}>
-          {props.data.message}
-        </p>
       </div>
     </>
   );
