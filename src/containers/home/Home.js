@@ -25,12 +25,12 @@ export const Home = (props) => {
       {data.data[0] ?
       <>
       <p>Your link is available <a href={process.env.PUBLIC_URL+"/page/"+data.user_name}>Here</a></p>
-      <Link to={process.env.PUBLIC_URL+"/add_data/"} params={{data: data}} ><button>Add Links</button></Link>
+      <Link to={process.env.PUBLIC_URL+"/links/"} params={{data: data}} ><button>Add Links</button></Link>
       </>
       :
       <>
       <p>You have not saved anything yet</p>
-      <Link to={process.env.PUBLIC_URL+"/add_data/"} params={{data: data}} ><button>Add Links</button></Link>
+      <Link to={process.env.PUBLIC_URL+"/links/"} params={{data: data}} ><button>Add Links</button></Link>
       </>}
     </div>
   </div>)

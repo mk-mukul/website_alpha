@@ -9,7 +9,7 @@ const UPDATE_URL = process.env.REACT_APP_SERVER + "/update/link";
 let firstRun = true;
 let initLinks = [];
 
-export const AddData = (props) => {
+export const AddLinks = (props) => {
   // console.log(props.data.user_data.user_name)
 
   // let initLinks = props.data.user_data.data;

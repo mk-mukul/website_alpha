@@ -1,6 +1,6 @@
 
 // import "../style/link_page.css"
-import "../script/link_page"
+import "../../script/link_page"
 
 
 export const LinkPage = (props) => {

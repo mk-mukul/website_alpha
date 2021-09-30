@@ -1,7 +1,7 @@
 // require("dotenv").config();
 import React from "react";
 import { LinkPage } from "./LinkPage";
-import { PublicPage } from "./PublicPage";
+import { PublicPage } from "../public/PublicPage";
 // import { Redirect} from "react-router-dom";
 
 const URL = process.env.REACT_APP_SERVER+"/link/";

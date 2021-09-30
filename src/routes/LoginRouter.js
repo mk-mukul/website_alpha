@@ -2,13 +2,13 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 // import Cookies from "js-cookie";
-import { Header } from "../containers/Header";
+import { Header } from "../components/Header";
 // import "../style/header.css";
 // import "../style/home.css";
-import { Profile } from "../containers/Profile";
-import { Home } from "../containers/Home";
-import { AddData } from "../containers/AddData";
-import { Inbox } from "../containers/Inbox";
+import { Profile } from "../containers/profile/Profile";
+import { Home } from "../containers/home/Home";
+import { AddLinks } from "../containers/addLink/AddLink";
+import { Inbox } from "../containers/inbox/Inbox";
 
 const URL = process.env.REACT_APP_SERVER + "/";
 // console.log(URL)
@@ -95,11 +95,11 @@ const UserFound = (props) => {
                   />
                   <Route
                     exact
-                    path={process.env.PUBLIC_URL + "/add_data/"}
+                    path={process.env.PUBLIC_URL + "/links/"}
                     render={() => {
                       return (
                         <>
-                          <AddData data={data} token={props.token} />
+                          <AddLinks data={data} token={props.token} />
                         </>
                       );
                     }}

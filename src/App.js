@@ -19,7 +19,7 @@ import { MainRouter } from "./routes/MainRouter";
 import Signin from "./containers/auth/Signin";
 import Signup from "./containers/auth/Signup";
 // import Home from "./containers/Home";
-import LinkWebsite from "./containers/LinkWebsite";
+import LinkWebsite from "./containers/public/LinkWebsite";
 // import { Profile } from "./containers/Profile";
 import { Test } from "./containers/Test";
 
