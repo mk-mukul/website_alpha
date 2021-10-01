@@ -18,86 +18,18 @@ const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
 // console.log(URL)
 
 export const Inbox = (props) => {
-  // console.log(props.user.chats_id);
 
-  // const [msg, setMsg] = useState("");
-  // const [currentChat, setCurrentChat] = useState(null);
   const [addFrndInp, setAddFrndInp] = useState("");
-  // const [inMsg, setInMsg] = useState(null);
-  // const [inMsgLive, setInMsgLive] = useState({
-  //   from_user_name: "",
-  //   message: "",
-  // });
-  // const [messages, setMeassages] = useState([]);
   const socket = useRef();
-  // const scrollRef = useRef();
-
-  // useEffect(() => {
-    // socket.current = io(URL);
-  //   socket.current.on("getMessage", (data) => {
-  //     setInMsg({
-  //       message: data.message,
-  //       name: data.from_user_name,
-  //       time: data.time,
-  //     });
-  //     setInMsgLive({ from_user_name: "", message: "" });
-  //   });
-  //   socket.current.on("getMsgLive", (data) => {
-  //     setInMsgLive(data);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   const to_user_name = currentChat;
-  //   // console.log(to_user_name)
-  //   socket.current.emit("sendMsgLive", {
-  //     from_user_name: props.user.user_name,
-  //     to_user_name: to_user_name,
-  //     message: msg,
-  //   });
-  // }, [msg, currentChat, props.user.user_name]);
-
-  // useEffect(() => {
-  //   if (inMsg && currentChat === inMsg.name) {
-  //     setMeassages((prev) => [...prev, inMsg]);
-  //   }
-  // }, [inMsg, currentChat]);
 
   useEffect(() => {
     // console.log("props user change")
     socket.current = io(URL);
     socket.current.emit("addUser", {user_name: props.user.user_name, user_id: props.user._id });
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      // console.log(users);
     });
   }, [props.user]);
-
-  // const submit = (e) => {
-  //   e.preventDefault();
-  //   if (msg) {
-  //     const to_user_name = currentChat;
-  //     socket.current.emit("sendMessage", {
-  //       from_user_name: props.user.user_name,
-  //       to_user_name: to_user_name,
-  //       message: msg,
-  //       time: new Date(),
-  //     });
-
-  //     const data = {
-  //       message: msg,
-  //       name: props.user.user_name,
-  //       time: new Date(),
-  //     };
-  //     updateChat(currentChat, data);
-  //     setMeassages([...messages, data]);
-  //     setMsg("");
-  //     // console.log(data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages, inMsgLive]);
 
   const path = window.location.pathname.split("/").slice(2,4);
   // console.log(path[0])
@@ -115,12 +47,6 @@ export const Inbox = (props) => {
       setChat_list("flex");
     }
   }, [path])
-  // openChat()
-  // const back = () => {
-  //   // console.log("i am back")
-  //   setChat_windoe("hidden");
-  //   setChat_list("flex");
-  // };
 
   const addFriend = async (e) => {
     e.preventDefault();

@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { Message } from "./Message";
 import Cookies from "js-cookie";
 import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
-// import { collapseClasses } from "@mui/material";
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats/";
 const SEND_URL = process.env.REACT_APP_SERVER + "/update/chat";
 
 export const ChatWindow = (props) => {
-  // console.log(props.chat_id)
   const [msg, setMsg] = useState("");
   const [userName, setUserName] = useState(null);
   const [currentChat, setCurrentChat] = useState("");
@@ -22,67 +21,49 @@ export const ChatWindow = (props) => {
     from_user_name: "",
     message: "",
   });
+  const [chatData, setChatData] = useState(null);
+  const [selectedMsg, setSelectedMsg] = useState(null);
   const socket = useRef();
   const scrollRef = useRef();
 
-  const [chatData, setChatData] = useState(null);
-
+  // get message from socket io
   useEffect(() => {
     socket.current = io(URL);
     socket.current.on("getMessage", (data) => {
-      // console.log(data);
-      setInMsg({
-        message: data.message,
-        name: data.from_user_name,
-        time: data.time,
-      });
-
+      setInMsg(data);
       setMsgLive({ from_user_name: "", message: "" });
     });
     socket.current.on("getMsgLive", (data) => {
-      // if (data.from_user_name === currentChat) {
-      //   setInMsgLive(data);
-      // }
-      setInMsgLive({
-        from_user_name: data.from_user_name,
-        message: data.message,
-      });
-      // console.log(inMsgLive);
+      setInMsgLive(data);
     });
   }, []);
 
+  // inform socket io that user has joined
   useEffect(() => {
     if (userName) {
       socket.current.emit("addUser", { user_name: userName, user_id: "data" });
     }
   }, [userName]);
 
+  // display live typing...
   useEffect(() => {
-    // console.log(inMsgLive);
     if (inMsgLive && currentChat === inMsgLive.from_user_name) {
       setMsgLive(inMsgLive);
     }
-    // else if (inMsgLive && currentChat !== inMsgLive.from_user_name) {
-    //   setMsgLive({ from_user_name: "", message: "" });
-    // }
   }, [inMsgLive, currentChat]);
 
+  // desplay new message
   useEffect(() => {
-    // console.log(inMsg);
-    if (inMsg && currentChat === inMsg.name) {
+    if (inMsg && currentChat === inMsg.from_user_name) {
       setMeassages((prev) => [...prev, inMsg]);
     }
   }, [inMsg, currentChat]);
 
-  // const [chat_window, setChat_windoe] = useState("hidden");
-  // const [chat_list, setChat_list] = useState("flex");
+  // fetch chat data
   useEffect(() => {
     async function fetchData() {
       const data = await getChat(props.chat_id);
       setChatData(data);
-      // console.log(data);
-      // setChat_windoe("flex");
-      // setChat_list("hidden");
       setMeassages(data.chat_data);
       setCurrentChat(data.chats_of.with);
       setUserName(data.chats_of.owner);
@@ -90,6 +71,7 @@ export const ChatWindow = (props) => {
     fetchData();
   }, [props.chat_id]);
 
+  // send message
   const submit = (e) => {
     e.preventDefault();
     if (msg) {
@@ -97,38 +79,42 @@ export const ChatWindow = (props) => {
         from_user_name: userName,
         to_user_name: currentChat,
         message: msg,
+        reply: selectedMsg,
         time: new Date(),
       });
-
       const data = {
         message: msg,
         name: userName,
+        reply: selectedMsg,
         time: new Date(),
       };
       updateChat(currentChat, data);
       setMeassages([...messages, data]);
-      // console.log(msg);f
       setMsg("");
-      // setTimeout(() => {
-
-      //   console.log(msg);
-      // }, 1000);
+      setSelectedMsg(null)
     }
   };
 
+  // send live typing...
   useEffect(() => {
     const to_user_name = currentChat;
-    // console.log(to_user_name)
     socket.current.emit("sendMsgLive", {
       from_user_name: userName,
       to_user_name: to_user_name,
       message: msg,
+      reply: selectedMsg,
     });
-  }, [msg, currentChat, userName]);
+  }, [msg, currentChat, userName, selectedMsg]);
 
+  // automatic scroll
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, msgLive]);
+
+  // set delected message for reply
+  const selectMsg = (data) => {
+    setSelectedMsg(data);
+  };
 
   return (
     <>
@@ -149,25 +135,28 @@ export const ChatWindow = (props) => {
             </Link>
             <h2>{currentChat}</h2>
           </div>
-          <div className="flex-grow pt-16 overflow-y-auto" id="scrollBottom">
+          <div
+            className="flex-grow pt-16 pb-2 overflow-y-auto"
+            id="scrollBottom"
+          >
             {messages.map((val, ind) => {
               return (
-                //   <div>
                 <Message
                   key={ind}
                   user={userName}
                   data={val}
                   own={userName === val.name}
                   scrollRef={scrollRef}
+                  selectMsg={selectMsg}
                 />
-                //   </div>
               );
             })}
             {msgLive.message ? (
               <>
                 <Message
+                  user={userName}
                   friend={currentChat}
-                  inMsgLive={msgLive}
+                  data={msgLive}
                   scrollRef={scrollRef}
                 />
               </>
@@ -175,7 +164,23 @@ export const ChatWindow = (props) => {
               <></>
             )}
           </div>
-          <form className="flex h-12" id="chats-send-container">
+          {selectedMsg ? (
+            <>
+              <div className="clear-both px-3 py-1 bg-white">
+                <div className="flex justify-between text-gray-600">
+                  {selectedMsg.name === userName ? "you" : selectedMsg.name}
+                  <div onClick={() => { setSelectedMsg(null) }} className="mr-2"><ClearRoundedIcon /></div>
+                </div>
+                <div className="truncate ">{selectedMsg.message}</div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+          <form
+            className="bottom-0 sm:static w-full flex "
+            id="chats-send-container"
+          >
             <input
               className="flex-grow p-2.5"
               type="text"
