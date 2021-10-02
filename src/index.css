@@ -6,10 +6,7 @@
 /* base style */
 @layer base{
     #root{
-        @apply min-h-screen bg-mukul-100
-    }
-    a{
-        @apply text-blue-700
+        @apply min-h-screen
     }
     h1{
         @apply text-3xl
@@ -21,7 +18,7 @@
         @apply text-xl
     }
     button{
-        @apply border-2 rounded-md px-2 py-0.5 bg-mukul-400 text-white
+        @apply border-2 rounded-md px-2 py-0.5
     }
     input{
         @apply border-2 px-1 py-0.5 text-sm focus:outline-none
@@ -33,7 +30,7 @@
 .message_box {
     min-width: 38.4px;
     max-width: 85%;
-    margin: 4px 10px;
+    background: #2C1C46;
   }
 
 

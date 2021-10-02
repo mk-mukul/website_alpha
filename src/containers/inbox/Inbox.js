@@ -20,6 +20,7 @@ const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
 export const Inbox = (props) => {
 
   const [addFrndInp, setAddFrndInp] = useState("");
+  const [actives, setActives] = useState([]);
   const socket = useRef();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export const Inbox = (props) => {
     socket.current.emit("addUser", {user_name: props.user.user_name, user_id: props.user._id });
     socket.current.on("getUsers", (users) => {
       // console.log(users);
+      setActives(users)
     });
   }, [props.user]);
 
@@ -62,30 +64,31 @@ export const Inbox = (props) => {
   return (
     <>
       <section className="flex sm:pt-16 h-screen justify-center">
-        <div className="flex h-full sm:border-2 rounded-lg">
+        <div className="flex h-full w-auto sm:border-2 rounded-lg">
           <div
             className={
               chat_list +
-              " chat_list mt-16 sm:mt-0 w-screen sm:w-auto bg-gray-500 sm:flex flex-col"
+              " chat_list mt-16 sm:mt-0 w-screen sm:w-auto bg-background-701 sm:border-r-2 sm:flex flex-col"
             }
           >
-            <div className="grid justify-center bg-gray-700 text-white px-1 py-3">
+            <div className="grid justify-center bg-background-801 text-light-101 px-1 py-3">
               <h2>{props.user.user_name}</h2>
             </div>
 
             <div className="overflow-y-auto">
               {props.user.chats_id.map((val, ind) => {
-                return <Friend key={ind} data={val} />;
+                return <Friend key={ind} data={val} actives={actives}/>;
               })}
               <div className="flex flex-col m-1">
                 <input
+                className="rounded-sm"
                   type="text"
                   placeholder="Enter friend's user name"
                   value={addFrndInp}
                   onChange={(e) => setAddFrndInp(e.currentTarget.value)}
                 />
                 <button
-                  className="m-1"
+                  className="mt-1 bg-background-301 text-light-101"
                   onClick={(e) => {
                     addFriend(e);
                   }}
@@ -99,7 +102,7 @@ export const Inbox = (props) => {
           <div
             className={
               chat_window +
-              " sm:flex h-screen sm:h-auto z-50 sm:z-0 flex-col w-screen sm:w-96 bg-blue-600"
+              " sm:flex h-screen sm:h-auto z-50 sm:z-0 flex-col w-screen sm:w-96 bg-background-701"
             }
           >
             <Switch>
@@ -109,7 +112,7 @@ export const Inbox = (props) => {
                 render={() => {
                   return (
                     <>
-                      <span className="flex justify-center text-6xl mt-16 text-white p-3 opacity-50 cursor-default">
+                      <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
                         open a chat
                       </span>
                     </>

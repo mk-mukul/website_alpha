@@ -5,6 +5,8 @@ import { Message } from "./Message";
 import Cookies from "js-cookie";
 import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
+import InfoIcon from '@mui/icons-material/Info';
+import SendIcon from '@mui/icons-material/Send';
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats/";
@@ -30,6 +32,7 @@ export const ChatWindow = (props) => {
   useEffect(() => {
     socket.current = io(URL);
     socket.current.on("getMessage", (data) => {
+      // console.log(data)
       setInMsg(data);
       setMsgLive({ from_user_name: "", message: "" });
     });
@@ -78,6 +81,7 @@ export const ChatWindow = (props) => {
       socket.current.emit("sendMessage", {
         from_user_name: userName,
         to_user_name: currentChat,
+        name: userName,
         message: msg,
         reply: selectedMsg,
         time: new Date(),
@@ -101,6 +105,7 @@ export const ChatWindow = (props) => {
     socket.current.emit("sendMsgLive", {
       from_user_name: userName,
       to_user_name: to_user_name,
+      name: to_user_name,
       message: msg,
       reply: selectedMsg,
     });
@@ -113,27 +118,35 @@ export const ChatWindow = (props) => {
 
   // set delected message for reply
   const selectMsg = (data) => {
+    // console.log(data)
     setSelectedMsg(data);
   };
+
+  const info = ()=>{
+    console.log(currentChat)
+  }
 
   return (
     <>
       {!chatData ? (
         <>
-          <span className="flex justify-center text-6xl mt-16 text-white p-3 opacity-50 cursor-default">
+          <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
             Loading...
           </span>
         </>
       ) : (
         <>
-          <div className="fixed w-full z-10 sm:w-96 flex justify-center p-3 bg-gray-700 text-white">
+          <div className="fixed w-full z-10 sm:w-96 flex justify-between p-3 bg-background-801 text-primary-101">
             <Link
               to={process.env.PUBLIC_URL + "/inbox/"}
-              className="sm:hidden absolute left-3 text-white cursor-pointer"
+              className=" cursor-pointer"
             >
               <ArrowBackIosNewRoundedIcon />
             </Link>
             <h2>{currentChat}</h2>
+            <div onClick={()=>info()} className="cursor-pointer">
+              <InfoIcon />
+            </div>
           </div>
           <div
             className="flex-grow pt-16 pb-2 overflow-y-auto"
@@ -166,19 +179,19 @@ export const ChatWindow = (props) => {
           </div>
           {selectedMsg ? (
             <>
-              <div className="clear-both px-3 py-1 bg-white">
-                <div className="flex justify-between text-gray-600">
+              <div className="clear-both px-3 py-1 bg-background-301">
+                <div className="flex text-sm justify-between text-light-301 opacity-60">
                   {selectedMsg.name === userName ? "you" : selectedMsg.name}
-                  <div onClick={() => { setSelectedMsg(null) }} className="mr-2"><ClearRoundedIcon /></div>
+                  <div onClick={() => { setSelectedMsg(null) }} className="mr-1"><ClearRoundedIcon /></div>
                 </div>
-                <div className="truncate ">{selectedMsg.message}</div>
+                <div className="truncate text-sm text-light-101 ">{selectedMsg.message}</div>
               </div>
             </>
           ) : (
             <></>
           )}
           <form
-            className="bottom-0 sm:static w-full flex "
+            className=" bottom-0 sm:static w-full flex "
             id="chats-send-container"
           >
             <input
@@ -191,13 +204,13 @@ export const ChatWindow = (props) => {
               onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
             />
             <button
-              className="px-4 border-none rounded-none"
+              className="px-4 border-none rounded-none text-light-101 bg-background-301"
               id="chats-btn"
               onClick={(e) => {
                 submit(e);
               }}
             >
-              Send
+              <SendIcon/>
             </button>
           </form>
         </>
