@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 
 export const Friend = (props) => {
   var active = false;
-  // console.log(props.actives);
-  // console.log(props.data.to_user_name);
   for (let i = 0; i < props.actives.length; i++) {
     active =
       props.actives[i].user_name === props.data.to_user_name ? true : false;
       if (active) {
         break;
       }
-    console.log(props.actives[i].user_name);
   }
 
   return (
@@ -21,7 +18,7 @@ export const Friend = (props) => {
           <div className="h-10 w-10 relative rounded-full bg-white">
             {active ? (
               <>
-                <div className="h-2 w-2 rounded-full absolute bottom-0 right-1 bg-green-400"></div>
+                <div className="h-2.5 w-2.5 rounded-full absolute bottom-0 right-1 bg-green-400"></div>
               </>
             ) : (
               <></>
@@ -29,7 +26,7 @@ export const Friend = (props) => {
           </div>
           <div className="ml-2 flex-grow">
             <h4 className="font-medium text-sm">{props.data.to_user_name}</h4>
-            <p className="text-xs text-light-401 truncate">Hellloooooooo...</p>
+            <p className="text-xs text-light-401 truncate"></p>
           </div>
         </div>
         {/* </div> */}

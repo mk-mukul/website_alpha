@@ -7,7 +7,7 @@
 #link-page header {
     width: 100%;
     position: fixed;
-    background-color: #4C4C6D;
+    background-color: #1a112a;
     color: #ffffff;
 }
 
@@ -29,7 +29,7 @@
     padding: 3.43rem 0rem;
     display: grid;
     justify-items: center;
-    background-color: #4C4C6D;
+    /* background-color: #4C4C6D; */
     color: #ffffff;
     min-height: calc(100vh - 2*3.43rem);
     font-size: 1rem;

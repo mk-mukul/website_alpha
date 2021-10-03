@@ -2,12 +2,7 @@ import React from "react";
 import Cookies from "js-cookie";
 import { Redirect, Link } from "react-router-dom";
 
-// const cookies = require("js-cookie");
-
-// import "fetch"
-
 const URL = process.env.REACT_APP_SERVER + "/signin";
-// console.log(URL)
 
 export default class Signin extends React.Component {
   state = {
@@ -48,49 +43,49 @@ export default class Signin extends React.Component {
           <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
         ) : (
           <>
-            <section className="main_body">
-              <div className="form">
-                <h2 className="form-heading">Login</h2>
-                <div className="signin-form">
-                  <div className="form-cell">
-                    <label htmlFor="user_name">User Name</label>
-                    <input
-                      type="text"
-                      value={this.state.user_name}
-                      onChange={(e) => {
-                        this.setState({ user_name: e.target.value });
-                      }}
-                    />
-                  </div>
-                  <div className="form-cell">
-                    <label htmlFor="password">Password</label>
-                    <input
-                      type="text"
-                      value={this.state.password}
-                      onChange={(e) => {
-                        this.setState({ password: e.target.value });
-                      }}
-                      onKeyDownCapture={(e) =>
-                        e.key === "Enter" ? this.submit(e) : null
-                      }
-                    />
-                  </div>
-                  <div className="form-cell">
-                    <button
-                      onClick={() => {
-                        this.submit();
-                      }}
-                    >
-                      Login
-                    </button>
-                  </div>
+            <section className="w-screen min-h-screen flex justify-center items-center text-light-101 bg-background-101">
+              <div className="flex items-center w-56 flex-col">
+                <h2 className="mb-2 font-medium">Log In</h2>
+                <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">
+                  <input
+                    className="py-1 px-2 rounded-md bg-light-101 focus:border-light-201"
+                    type="text"
+                    placeholder=" username"
+                    value={this.state.user_name}
+                    onChange={(e) => {
+                      this.setState({ user_name: e.target.value });
+                    }}
+                  />
+                  <input
+                    className="py-1 px-2 rounded-md bg-light-101 focus:border-light-201"
+                    type="password"
+                    placeholder=" Password"
+                    value={this.state.password}
+                    onChange={(e) => {
+                      this.setState({ password: e.target.value });
+                    }}
+                    onKeyDownCapture={(e) =>
+                      e.key === "Enter" ? this.submit(e) : null
+                    }
+                  />
+
+                  <button className="w-full mt-4 p-0 bg-background-401 text-light-101"
+                    onClick={() => {
+                      this.submit();
+                    }}
+                  >
+                    Log In
+                  </button>
                 </div>
-                <Link
-                  className="form-link"
-                  to={process.env.PUBLIC_URL + "/signup/"}
-                >
-                  Click to make an account
-                </Link>
+                <div className="text-sm text-light-101 mt-4">
+                 {"Don't have an account?? "}
+                  <Link
+                    className="text-blue-600 font-medium"
+                    to={process.env.PUBLIC_URL + "/signup/"}
+                  >
+                    signup
+                  </Link>
+                </div>
               </div>
             </section>
           </>

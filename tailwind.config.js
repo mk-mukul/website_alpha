@@ -4,10 +4,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        mukul: {
-          400: "#4C4C6D",
-          100: "#E8F6EF",
-        },
         background: {
           101: "#807790",
           201: "#6b607e",

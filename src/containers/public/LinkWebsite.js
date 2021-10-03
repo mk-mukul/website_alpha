@@ -1,12 +1,9 @@
-// require("dotenv").config();
 import React from "react";
 import { LinkPage } from "./LinkPage";
 import { PublicPage } from "../public/PublicPage";
-// import { Redirect} from "react-router-dom";
+import { Loading } from "../../components/Loading";
 
-const URL = process.env.REACT_APP_SERVER+"/link/";
-// console.log(URL)
-
+const URL = process.env.REACT_APP_SERVER + "/link/";
 export default class LinkWebsite extends React.Component {
   state = {
     loading: true,
@@ -14,7 +11,6 @@ export default class LinkWebsite extends React.Component {
   };
 
   async componentDidMount() {
-    // console.log(this.props.id)
     const res = await fetch(URL + this.props.id);
     if (res.status === 404) {
       this.setState({ loading: false });
@@ -28,19 +24,17 @@ export default class LinkWebsite extends React.Component {
     return (
       <>
         {this.state.loading ? (
-          <section className="main_body">
-            <h2> Loading... </h2>
-          </section>
+          <Loading />
         ) : (
           <>
             {this.state.data ? (
               <>
                 {this.props.id !== "btech20" ? (
-                  <div>
+                  <div className="min-h-screen bg-background-101">
                     <PublicPage data={this.state.data} />
                   </div>
                 ) : (
-                  <div>
+                  <div className="min-h-screen bg-background-401">
                     <LinkPage data={this.state.data} />
                   </div>
                 )}

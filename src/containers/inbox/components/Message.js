@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "timeago.js";
 import ReplyIcon from "@mui/icons-material/Reply";
 
@@ -16,13 +16,16 @@ export const Message = (props) => {
     reply = props.data.reply.name === props.user ? "bg-background-501" : "bg-background-401";
   }
   if (props.friend) {
-    classes2 = "bg-yellow-100";
+    classes2 = "bg-background-201";
   }
 
-  const [isTime, setIsTime] = useState(false);
+  const [isTime, setIsTime] = useState(props.last);
   const time = () => {
     isTime ? setIsTime(false) : setIsTime(true);
   };
+  useEffect(() => {
+    setIsTime(props.last)
+  }, [props.last])
 
   const [isReply, setIsReply] = useState("truncate");
   const showReply = () => {
@@ -73,7 +76,7 @@ export const Message = (props) => {
         <p
           className={
             props.own
-              ? "justify-end flex text-xs p-0 m-0"
+              ? "justify-end flex text-xsm p-0 m-0"
               : "justify-start flex text-xsm p-0 m-0"
           }
         >

@@ -1,11 +1,9 @@
 
-// import "../style/link_page.css"
 import "../../script/link_page"
 
 
 export const LinkPage = (props) => {
     const data = props.data;
-    //   console.log(data);
     return (
         <>
             <div id="link-page">
@@ -80,7 +78,6 @@ export const LinkPage = (props) => {
 };
 
 const CourseCard = (props) => {
-    // console.log(props.data)
     return (<>
         <div className={props.class}>
             <h3>{props.data.course}</h3>
@@ -99,7 +96,6 @@ const CourseCard = (props) => {
 }
 
 const Timing = (props) => {
-    // console.log(props.data)
     return (
         <>
             <h4 className="time">{props.data.time}</h4>
@@ -118,7 +114,6 @@ const Timing = (props) => {
 }
 
 const ClassLink = (props) => {
-    // console.log(props.data)
     return (<>
         <h5>
             <a href={props.data.link} target="blank">{props.data.section}</a>

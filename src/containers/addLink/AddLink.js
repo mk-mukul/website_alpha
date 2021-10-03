@@ -2,26 +2,16 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
 const UPDATE_URL = process.env.REACT_APP_SERVER + "/update/link";
-
-// console.log(UPDATE_URL)
-// console.log(process.env.PUBLIC_URL)
-
 let firstRun = true;
 let initLinks = [];
 
 export const AddLinks = (props) => {
-  // console.log(props.data.user_data.user_name)
-
-  // let initLinks = props.data.user_data.data;
-
   if (firstRun) {
-    // console.log("first run")
     initLinks = props.data.user_data.data;
     firstRun = false;
   }
 
   const onDelete = (link) => {
-    // console.log("deleting the link ");
     setLinks(
       links.filter((e) => {
         return e !== link;
@@ -35,7 +25,6 @@ export const AddLinks = (props) => {
       link: link,
     };
     setLinks([...links, newLink]);
-    // console.log(newLink)
   };
 
   const [links, setLinks] = useState(initLinks);
@@ -80,9 +69,7 @@ const update = async (links) => {
         data: links,
       }),
     });
-    // const user_data = await res.json();
-    // console.log(user_data.data);
-    // return user_data.data;
+
   } catch (err) {
     console.log(err);
     alert("Something went wrong");
@@ -174,18 +161,3 @@ const AddLink = (props) => {
     </>
   );
 };
-
-/*
-
-{"data": [{"title": "hello",
-    "link": "hello.com"
-},
-{"title": "hello2",
-    "link": "hello2.com"
-}
-],
-"public" : true
-}
-
-
-*/
