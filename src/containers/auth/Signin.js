@@ -47,43 +47,48 @@ export default class Signin extends React.Component {
               <div className="flex items-center w-56 flex-col">
                 <h2 className="mb-2 font-medium">Log In</h2>
                 <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">
-                  <input
-                    className="py-1 px-2 rounded-md bg-light-101 focus:border-light-201"
-                    type="text"
-                    placeholder=" username"
-                    value={this.state.user_name}
-                    onChange={(e) => {
-                      this.setState({ user_name: e.target.value });
-                    }}
-                  />
-                  <input
-                    className="py-1 px-2 rounded-md bg-light-101 focus:border-light-201"
-                    type="password"
-                    placeholder=" Password"
-                    value={this.state.password}
-                    onChange={(e) => {
-                      this.setState({ password: e.target.value });
-                    }}
-                    onKeyDownCapture={(e) =>
-                      e.key === "Enter" ? this.submit(e) : null
-                    }
-                  />
-
-                  <button className="w-full mt-4 p-0 bg-background-401 text-light-101"
-                    onClick={() => {
-                      this.submit();
-                    }}
-                  >
-                    Log In
-                  </button>
+                  <div className="w-full">
+                    <input
+                      className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-light-201"
+                      type="text"
+                      placeholder=" username"
+                      value={this.state.user_name}
+                      onChange={(e) => {
+                        this.setState({ user_name: e.target.value });
+                      }}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <input
+                      className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-light-201"
+                      type="password"
+                      placeholder=" Password"
+                      value={this.state.password}
+                      onChange={(e) => {
+                        this.setState({ password: e.target.value });
+                      }}
+                      onKeyDownCapture={(e) =>
+                        e.key === "Enter" ? this.submit(e) : null
+                      }
+                    />
+                  </div>
+                  <div className="w-full">
+                    <button className="w-full mt-4 p-0 bg-background-401 text-light-101"
+                      onClick={() => {
+                        this.submit();
+                      }}
+                    >
+                      Log In
+                    </button>
+                  </div>
                 </div>
                 <div className="text-sm text-light-101 mt-4">
-                 {"Don't have an account?? "}
+                  {"Don't have an account?? "}
                   <Link
-                    className="text-blue-600 font-medium"
+                    className="hover:text-blue-800 font-medium"
                     to={process.env.PUBLIC_URL + "/signup/"}
                   >
-                    signup
+                    Sign Up
                   </Link>
                 </div>
               </div>

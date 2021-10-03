@@ -56,8 +56,10 @@ export default class Signup extends React.Component {
                 <h2 className="mb-2 font-medium">Sign Up</h2>
                 <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">
                   <div className="w-full">
-                    <label className="text-xs text-light-201" htmlFor="name">Name</label>
-                    <input 
+                    <label className="text-xs text-light-201" htmlFor="name">
+                      Name
+                    </label>
+                    <input
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-dark-501"
                       type="text"
                       placeholder=" Alpha"
@@ -68,7 +70,12 @@ export default class Signup extends React.Component {
                     />
                   </div>
                   <div className="w-full">
-                    <label className="text-xs text-light-201" htmlFor="user_name">User Name</label>
+                    <label
+                      className="text-xs text-light-201"
+                      htmlFor="user_name"
+                    >
+                      User Name
+                    </label>
                     <input
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-dark-501"
                       type="text"
@@ -80,7 +87,12 @@ export default class Signup extends React.Component {
                     />
                   </div>
                   <div className="w-full">
-                    <label className="text-xs text-light-201" htmlFor="user_name">Email</label>
+                    <label
+                      className="text-xs text-light-201"
+                      htmlFor="user_name"
+                    >
+                      Email
+                    </label>
                     <input
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-dark-501"
                       type="text"
@@ -92,7 +104,12 @@ export default class Signup extends React.Component {
                     />
                   </div>
                   <div className="w-full">
-                    <label className="text-xs text-light-201" htmlFor="password">Password</label>
+                    <label
+                      className="text-xs text-light-201"
+                      htmlFor="password"
+                    >
+                      Password
+                    </label>
                     <input
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-dark-501"
                       type="text"
@@ -104,7 +121,9 @@ export default class Signup extends React.Component {
                     />
                   </div>
                   <div className="w-full">
-                    <label className="text-xs text-light-201" htmlFor="phone">Phone No</label>
+                    <label className="text-xs text-light-201" htmlFor="phone">
+                      Phone No
+                    </label>
                     <input
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-dark-501"
                       type="number"
@@ -115,18 +134,23 @@ export default class Signup extends React.Component {
                       }}
                     />
                   </div>
-                  <button className="w-full mt-4 p-0 bg-background-401 text-light-101"
-                    onClick={() => {
-                      this.submit();
-                    }}
-                  >
-                    Signup
-                  </button>
-
+                  <div className="w-full">
+                    <button
+                      className="w-full mt-4 p-0 bg-background-401 text-light-101"
+                      onClick={() => {
+                        this.submit();
+                      }}
+                    >
+                      Signup
+                    </button>
+                  </div>
                 </div>
                 <div className="text-sm text-light-101 mt-4">
                   {"Already have an account?? "}
-                  <Link className="text-blue-600 font-medium" to={process.env.PUBLIC_URL + "/signin/"}>
+                  <Link
+                    className="hover:text-blue-800 font-medium"
+                    to={process.env.PUBLIC_URL + "/signin/"}
+                  >
                     Log In
                   </Link>
                 </div>
