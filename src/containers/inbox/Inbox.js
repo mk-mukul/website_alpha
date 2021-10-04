@@ -13,6 +13,9 @@ const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
 export const Inbox = (props) => {
   const [addFrndInp, setAddFrndInp] = useState("");
   const [actives, setActives] = useState([]);
+  const [friends, setFriends] = useState(props.user.chats_id);
+  const [inMsg, setInMsg] = useState(null);
+
   const socket = useRef();
 
   useEffect(() => {
@@ -24,7 +27,21 @@ export const Inbox = (props) => {
     socket.current.on("getUsers", (users) => {
       setActives(users);
     });
+    socket.current.on("getMessage", (data) => {
+      setInMsg(data);
+    });
   }, [props.user]);
+
+  useEffect(() => {
+    if (inMsg) {
+      const arr = friends;
+      const i = updateFriends(arr, inMsg);
+      setInMsg(null);
+      if (i!==-1) {
+        setFriends([...friends], friends[i].lastMsg = inMsg);
+      }
+    }
+  }, [inMsg, friends]);
 
   const path = window.location.pathname.split("/").slice(2, 4);
 
@@ -53,6 +70,7 @@ export const Inbox = (props) => {
 
   const logout = () => {
     Cookies.remove("token");
+    window.location.reload()
   };
 
   return (
@@ -78,10 +96,21 @@ export const Inbox = (props) => {
               </Link>
             </div>
 
-            <div className="overflow-y-auto pt-12 sm:pt-0">
-              {props.user.chats_id.map((val, ind) => {
-                return <Friend key={ind} data={val} actives={actives} />;
-              })}
+            <div className="overflow-y-auto w-screen sm:w-60 pt-12 sm:pt-0">
+              {friends ? (
+                sortTime(friends).map((val, ind) => {
+                  return (
+                    <Friend
+                      key={val.chat_id}
+                      data={val}
+                      user_name={props.user.user_name}
+                      actives={actives}
+                    />
+                  );
+                })
+              ) : (
+                <></>
+              )}
               <div className="flex flex-col m-1">
                 <input
                   className="rounded-sm"
@@ -161,3 +190,45 @@ const addChat = async (chat_id) => {
     alert("user not found");
   }
 };
+
+const sortTime = (chats_id) => {
+  const chats = chats_id;
+  chats.sort((a, b) => {
+    if (a.lastMsg && b.lastMsg) {
+      return a.lastMsg.time < b.lastMsg.time
+        ? 1
+        : b.lastMsg.time < a.lastMsg.time
+        ? -1
+        : 0;
+    } else if (a.lastMsg && !b.lastMsg) {
+      return -1;
+    } else if (!a.lastMsg && b.lastMsg) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+  return chats;
+};
+
+const updateFriends = (friends, message) => {
+  for (let i = 0; i < friends.length; i++) {
+    if (friends[i].to_user_name === message.from_user_name) {
+      // friends[i].lastMsg = message;
+      return i;
+    }
+  }
+  return -1;
+  // console.log(friends);
+  // return friends;
+};
+
+// inMsg format
+// {
+//   from_user_name: "test",
+//   to_user_name: "mukul",
+//   message: "rendom msg from test",
+//   name: "test",
+//   reply: null,
+//   time: "2021-10-04T11:54:59.450Z",
+// }

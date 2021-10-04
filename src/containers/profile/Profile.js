@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 export const Profile = (props) => {
   const logout = () => {
     Cookies.remove("token");
+    window.location.reload()
   };
   const user = props.user;
   return (

@@ -18,20 +18,23 @@ export default class LoginRouter extends React.Component {
     const token = this.props.token;
     if (token) {
       // Fetch data for home page
-      const res = await fetch(URL, {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          Authorization: token,
-        },
-      });
-
-      const data = await res.json();
-      this.setState({
-        data: data,
-        loading: false,
-        status: res.status,
-      });
+      try {
+        const res = await fetch(URL, {
+          method: "GET",
+          headers: {
+            Accept: "*/*",
+            Authorization: token,
+          },
+        });
+        const data = await res.json();
+        this.setState({
+          data: data,
+          loading: false,
+          status: res.status,
+        });
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
@@ -39,12 +42,12 @@ export default class LoginRouter extends React.Component {
     return (
       <>
         {this.state.loading ? (
-          <Loading/>
+          <Loading />
         ) : (
           <>
             {this.state.status === 200 ? (
               <UserFound data={this.state.data} token={this.props.token} />
-              ) : (
+            ) : (
               <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
             )}
           </>
