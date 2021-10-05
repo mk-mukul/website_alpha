@@ -38,7 +38,10 @@ export const Message = (props) => {
 
   return (
     <>
-      <div ref={props.last?props.scrollRef:null} className={"w-full clear-both mb-1 px-2"}>
+      <div
+        ref={props.last ? props.scrollRef : null}
+        className={"w-full clear-both mb-1 px-2"}
+      >
         <div className={"flex " + classes}>
           <div
             className={
@@ -75,14 +78,18 @@ export const Message = (props) => {
               <p>{props.data.message}</p>
             </div>
           </div>
-          {props.friend?<></>:<div
-            className="flex text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
-            onClick={() => {
-              props.selectMsg(props.data);
-            }}
-          >
-            <ReplyIcon />
-          </div>}
+          {props.friend ? (
+            <></>
+          ) : (
+            <div
+              className="flex text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
+              onClick={() => {
+                props.selectMsg(props.data);
+              }}
+            >
+              <ReplyIcon />
+            </div>
+          )}
         </div>
         <div
           className={
@@ -93,18 +100,19 @@ export const Message = (props) => {
         >
           <span className="text-white opacity-80 cursor-default">
             {props.friend ? <label>typing...</label> : <></>}
-            {!isTime ? (
-              <></>
-            ) : (
+            {isTime ? (
               <>
                 {/* <label className="text-xs text-white opacity-70">{name} </label> */}
                 {props.data.time ? format(props.data.time) : ""}
               </>
-            )}
-            {props.last && props.isSeen && props.own ? (
-              <div className="flex justify-end">seen</div>
             ) : (
-              ""
+              <>
+                {props.last && props.isSeen && props.own ? (
+                  <div className="flex justify-end">seen</div>
+                ) : (
+                  ""
+                )}
+              </>
             )}
           </span>
         </div>

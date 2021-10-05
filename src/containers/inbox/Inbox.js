@@ -18,45 +18,64 @@ export const Inbox = (props) => {
   const [seen, setSeen] = useState(null);
 
   const socket = useRef();
+  const scrollRef = useRef();
 
   useEffect(() => {
-    socket.current = io(URL);
-    socket.current.emit("addUser", {
-      user_name: props.user.user_name,
-      user_id: props.user._id,
-    });
-    socket.current.on("getUsers", (users) => {
-      setActives(users);
-    });
-    socket.current.on("getMessage", (data) => {
-      setInMsg(data);
-      data.isSeen = false;
-      setSeen(data);
-    });
-    socket.current.on("getSeen", (data) => {
-      setSeen(data);
-    });
+    let unMounted = false;
+    if (!unMounted) {
+      socket.current = io(URL);
+      socket.current.emit("addUser", {
+        user_name: props.user.user_name,
+        user_id: props.user._id,
+      });
+      socket.current.on("getUsers", (users) => {
+        setActives(users);
+      });
+      socket.current.on("getMessage", (data) => {
+        setInMsg(data);
+        data.isSeen = false;
+        setSeen(data);
+      });
+      socket.current.on("getSeen", (data) => {
+        setSeen(data);
+      });
+    }
+    return () => {
+      unMounted = true;
+    }
   }, [props.user]);
 
   useEffect(() => {
-    if (inMsg) {
-      const arr = friends;
-      const i = updateFriends(arr, inMsg, props.user.user_name);
-      setInMsg(null);
-      if (i !== -1) {
-        setFriends([...friends], (friends[i].lastMsg = inMsg));
+    let unMounted = false;
+    if (!unMounted) {
+      if (inMsg) {
+        const arr = friends;
+        const i = updateFriends(arr, inMsg, props.user.user_name);
+        setInMsg(null);
+        if (i !== -1) {
+          setFriends([...friends], (friends[i].lastMsg = inMsg));
+        }
       }
+    }
+    return () => {
+      unMounted = true;
     }
   }, [inMsg, friends, props.user]);
 
   useEffect(() => {
-    if (seen) {
-      const arr = friends;
-      const i = updateFriends(arr, seen, props.user.user_name);
-      setSeen(null);
-      if (i !== -1) {
-        setFriends([...friends], (friends[i].seen = seen.isSeen));
+    let unMounted = false;
+    if (!unMounted) {
+      if (seen) {
+        const arr = friends;
+        const i = updateFriends(arr, seen, props.user.user_name);
+        setSeen(null);
+        if (i !== -1) {
+          setFriends([...friends], (friends[i].seen = seen.isSeen));
+        }
       }
+    }
+    return () => {
+      unMounted = true;
     }
   }, [seen, friends, props.user]);
 
@@ -65,12 +84,18 @@ export const Inbox = (props) => {
   const [chat_window, setChat_windoe] = useState("hidden");
   const [chat_list, setChat_list] = useState("flex");
   useEffect(() => {
-    if (path[0] === "inbox" && path[1]) {
-      setChat_windoe("flex");
-      setChat_list("hidden");
-    } else {
-      setChat_windoe("hidden");
-      setChat_list("flex");
+    let unMounted = false;
+    if (!unMounted) {
+      if (path[0] === "inbox" && path[1]) {
+        setChat_windoe("flex");
+        setChat_list("hidden");
+      } else {
+        setChat_windoe("hidden");
+        setChat_list("flex");
+      }
+    }
+    return () => {
+      unMounted = true;
     }
   }, [path]);
 
@@ -89,6 +114,16 @@ export const Inbox = (props) => {
     Cookies.remove("token");
     window.location.reload();
   };
+
+  useEffect(() => {
+    let unMounted = false;
+    if (!unMounted) {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    return () => {
+      unMounted = true;
+    }
+  }, [inMsg]);
 
   return (
     <>
@@ -122,6 +157,7 @@ export const Inbox = (props) => {
                       data={val}
                       user_name={props.user.user_name}
                       actives={actives}
+                      scrollRef={ind===0?scrollRef:null}
                     />
                   );
                 })

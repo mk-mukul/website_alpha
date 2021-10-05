@@ -35,62 +35,108 @@ export const ChatWindow = (props) => {
 
   // get message from socket io
   useEffect(() => {
-    socket.current = io(URL);
-    socket.current.on("getMessage", (data) => {
-      // console.log(data)
-      setInMsg(data);
-      setMsgLive({ from_user_name: "", message: "" });
-    });
-    socket.current.on("getMsgLive", (data) => {
-      setInMsgLive(data);
-    });
+    let unMounted = false;
+    if (!unMounted) {
+      socket.current = io(URL);
+      socket.current.on("getMessage", (data) => {
+        // console.log(data)
+        if (!unMounted) {
+          setInMsg(data);
+        }
+        setMsgLive({ from_user_name: "", message: "" });
+      });
+      socket.current.on("getMsgLive", (data) => {
+        if (!unMounted) {
+          setInMsgLive(data);
+        }
+      });
+    }
+    return () => {
+      unMounted = true;
+    }
   }, []);
 
   // inform socket io that user has joined
   useEffect(() => {
-    if (userName) {
-      socket.current.emit("addUser", { user_name: userName });
+    let unMounted = false;
+    if (!unMounted) {
+      if (userName) {
+        socket.current.emit("addUser", { user_name: userName });
+      }
+    }
+    return () => {
+      unMounted = true;
     }
   }, [userName]);
 
   useEffect(() => {
-    socket.current.on("getUsers", (users) => {
-      setActives(users);
-    });
-    socket.current.on("getSeen", (data) => {
-      if (data.from_user_name===currentChat) {
-        setSeen(data);
-      }
-    });
+    let unMounted = false;
+    if (!unMounted) {
+      socket.current.on("getUsers", (users) => {
+        if (!unMounted) {
+          setActives(users);
+        }
+      });
+      socket.current.on("getSeen", (data) => {
+        if (data.from_user_name===currentChat) {
+          if (!unMounted) {
+            setSeen(data);
+          }
+        }
+      });
+    }
+    return () => {
+      unMounted = true;
+    }
   }, [currentChat]);
 
   // find whether friend is active or not
   useEffect(() => {
-    setIsActives(false);
-    for (let i = 0; i < actives.length; i++) {
-      if (actives[i].user_name === currentChat) {
-        setIsActives(true);
+    let unMounted = false;
+    if (!unMounted) {
+      setIsActives(false);
+    }
+      for (let i = 0; i < actives.length; i++) {
+        if (actives[i].user_name === currentChat) {
+          if (!unMounted) {
+            setIsActives(true);
+          }
+        }
       }
+    return () => {
+      unMounted = true;
     }
   }, [currentChat, actives]);
 
   // display live typing...
   useEffect(() => {
-    if (inMsgLive && currentChat === inMsgLive.from_user_name) {
-      setMsgLive(inMsgLive);
+    let unMounted = false;
+    if ((inMsgLive && currentChat === inMsgLive.from_user_name)) {
+      if (!unMounted) {
+        setMsgLive(inMsgLive);
+      }
+    }
+    return () => {
+      unMounted = true;
     }
   }, [inMsgLive, currentChat]);
 
   // desplay new message
   useEffect(() => {
-    if (inMsg && currentChat === inMsg.from_user_name) {
-      setMeassages((prev) => [...prev, inMsg]);
+    let unMounted = false;
+    if ((inMsg && currentChat === inMsg.from_user_name)) {
+      if (!unMounted) {
+        setMeassages((prev) => [...prev, inMsg]);
+      }
       socket.current.emit("seen", {
         from_user_name: userName,
         to_user_name: currentChat,
         name: userName,
         isSeen: true,
       });
+    }
+    return () => {
+      unMounted = true;
     }
   }, [inMsg, currentChat, userName]);
 
@@ -106,22 +152,28 @@ export const ChatWindow = (props) => {
 
   // fetch chat data
   useEffect(() => {
+    let unMounted = false;
     async function fetchData() {
       try {
         const data = await getChat(props.chat_id);
         if (!data) {
           return
         }
-        setChatData(data);
-        setMeassages(data.chat_data);
-        setCurrentChat(data.chats_of.with);
-        setUserName(data.chats_of.owner);
-        setSeen(data.seen);
+        if (!unMounted) {
+          setChatData(data);
+          setMeassages(data.chat_data);
+          setCurrentChat(data.chats_of.with);
+          setUserName(data.chats_of.owner);
+          setSeen(data.seen);
+        }
       } catch (err) {
         console.log(err)
       }
     }
     fetchData();
+    return () => {
+      unMounted = true;
+    }
   }, [props.chat_id]);
 
   // send message
@@ -164,13 +216,24 @@ export const ChatWindow = (props) => {
 
   // automatic scroll
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    let unMounted = false;
+    if (!unMounted) {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    return () => {
+      unMounted = true;
+    }
   }, [messages, msgLive]);
 
   // set delected message for reply
   const selectMsg = (data) => {
-    // console.log(data)
-    setSelectedMsg(data);
+    let unMounted = false;
+    if (!unMounted) {
+      setSelectedMsg(data);
+    }
+    return () => {
+      unMounted = true;
+    }
   };
 
   const info = () => {
@@ -215,13 +278,15 @@ export const ChatWindow = (props) => {
             id="scrollBottom"
           >
             {messages.map((val, ind) => {
+              const last = messages.length === ind + 1;
+              const own = userName === val.name;
               return (
                 <Message
                   key={ind}
-                  last={messages.length === ind + 1}
+                  last={last}
                   user={userName}
                   data={val}
-                  own={userName === val.name}
+                  own={own}
                   scrollRef={scrollRef}
                   selectMsg={selectMsg}
                   isSeen={seen}
@@ -308,6 +373,7 @@ const getChat = async (chat_id) => {
     return messages;
   } catch (err) {
     // console.log(err);
+    
     return false;
     // alert("user not found");
   }
@@ -333,6 +399,6 @@ const updateChat = async (to_user_name, message) => {
     // console.log(res);
   } catch (err) {
     console.log(err);
-    alert("Something went wrong");
+    alert("Something went wrong, Please Refress the page");
   }
 };

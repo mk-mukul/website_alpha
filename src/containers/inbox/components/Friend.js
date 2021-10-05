@@ -17,7 +17,7 @@ export const Friend = (props) => {
   return (
     <>
       <Link to={props.data.chat_id} className="">
-        <div className="flex cursor-pointer mt-0.5 px-2 py-2 hover:bg-background-301 text-light-101">
+        <div ref={props.scrollRef?props.scrollRef:null} className="flex cursor-pointer mt-0.5 px-2 py-2 hover:bg-background-301 text-light-101">
           <div className="h-10 w-10 flex-shrink-0 relative rounded-full bg-light-301">
             {active ? (
               <>
@@ -63,7 +63,7 @@ const LastMsg = (props) => {
             {props.lastMsg.name === props.user_name ? (
               <>
                 {props.isSeen ? (
-                  <DoneAllRoundedIcon fontSize="small" />
+                  <DoneAllRoundedIcon fontSize="small" className="text-blue-500" />
                 ) : (
                   <DoneRoundedIcon fontSize="small" />
                 )}
