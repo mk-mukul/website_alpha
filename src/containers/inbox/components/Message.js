@@ -13,7 +13,10 @@ export const Message = (props) => {
     classes2 = props.own ? "bg-background-501" : "bg-background-401";
   }
   if (props.data.reply) {
-    reply = props.data.reply.name === props.user ? "bg-background-501" : "bg-background-401";
+    reply =
+      props.data.reply.name === props.user
+        ? "bg-background-501"
+        : "bg-background-401";
   }
   if (props.friend) {
     classes2 = "bg-background-201";
@@ -22,10 +25,11 @@ export const Message = (props) => {
   const [isTime, setIsTime] = useState(props.last);
   const time = () => {
     isTime ? setIsTime(false) : setIsTime(true);
+    // console.log(props.last && !props.isSeen)
   };
   useEffect(() => {
-    setIsTime(props.last)
-  }, [props.last])
+    setIsTime(props.last && !props.isSeen);
+  }, [props.last, props.isSeen]);
 
   const [isReply, setIsReply] = useState("truncate");
   const showReply = () => {
@@ -34,7 +38,7 @@ export const Message = (props) => {
 
   return (
     <>
-      <div ref={props.scrollRef} className={"w-full clear-both mb-1 px-2"}>
+      <div ref={props.last?props.scrollRef:null} className={"w-full clear-both mb-1 px-2"}>
         <div className={"flex " + classes}>
           <div
             className={
@@ -43,7 +47,8 @@ export const Message = (props) => {
             }
           >
             {props.data.reply ? (
-              <div onClick={()=>showReply()}
+              <div
+                onClick={() => showReply()}
                 className={
                   " px-3 pb-1 border-black rounded-xl cursor-default " + reply
                 }
@@ -61,19 +66,25 @@ export const Message = (props) => {
             ) : (
               <></>
             )}
-            <div className="px-2.5 py-0.5 text-light-201 text-sm" onClick={()=>{time()}}>
+            <div
+              className="px-2.5 py-0.5 text-light-201 text-sm"
+              onClick={() => {
+                time();
+              }}
+            >
               <p>{props.data.message}</p>
             </div>
           </div>
-          <div className="flex text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
+          {props.friend?<></>:<div
+            className="flex text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
             onClick={() => {
               props.selectMsg(props.data);
             }}
           >
             <ReplyIcon />
-          </div>
+          </div>}
         </div>
-        <p
+        <div
           className={
             props.own
               ? "justify-end flex text-xsm p-0 m-0"
@@ -90,8 +101,13 @@ export const Message = (props) => {
                 {props.data.time ? format(props.data.time) : ""}
               </>
             )}
+            {props.last && props.isSeen && props.own ? (
+              <div className="flex justify-end">seen</div>
+            ) : (
+              ""
+            )}
           </span>
-        </p>
+        </div>
       </div>
     </>
   );

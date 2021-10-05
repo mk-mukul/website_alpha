@@ -30,8 +30,8 @@ export const Inbox = (props) => {
     });
     socket.current.on("getMessage", (data) => {
       setInMsg(data);
-      data.isSeen=false
-      setSeen(data)
+      data.isSeen = false;
+      setSeen(data);
     });
     socket.current.on("getSeen", (data) => {
       setSeen(data);
@@ -48,7 +48,7 @@ export const Inbox = (props) => {
       }
     }
   }, [inMsg, friends, props.user]);
- 
+
   useEffect(() => {
     if (seen) {
       const arr = friends;
@@ -160,8 +160,8 @@ export const Inbox = (props) => {
                 render={() => {
                   return (
                     <>
-                      <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
-                        open a chat
+                      <span className="flex justify-center text-3xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
+                        Welcome to Alpha Chats
                       </span>
                     </>
                   );

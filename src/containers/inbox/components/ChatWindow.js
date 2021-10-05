@@ -28,6 +28,7 @@ export const ChatWindow = (props) => {
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [actives, setActives] = useState([]);
   const [isActive, setIsActives] = useState(false);
+  const [seen, setSeen] = useState(false);
 
   const socket = useRef();
   const scrollRef = useRef();
@@ -55,6 +56,11 @@ export const ChatWindow = (props) => {
   useEffect(() => {
     socket.current.on("getUsers", (users) => {
       setActives(users);
+    });
+    socket.current.on("getSeen", (data) => {
+      if (data.from_user_name===currentChat) {
+        setSeen(data);
+      }
     });
   }, [currentChat]);
 
@@ -101,11 +107,19 @@ export const ChatWindow = (props) => {
   // fetch chat data
   useEffect(() => {
     async function fetchData() {
-      const data = await getChat(props.chat_id);
-      setChatData(data);
-      setMeassages(data.chat_data);
-      setCurrentChat(data.chats_of.with);
-      setUserName(data.chats_of.owner);
+      try {
+        const data = await getChat(props.chat_id);
+        if (!data) {
+          return
+        }
+        setChatData(data);
+        setMeassages(data.chat_data);
+        setCurrentChat(data.chats_of.with);
+        setUserName(data.chats_of.owner);
+        setSeen(data.seen);
+      } catch (err) {
+        console.log(err)
+      }
     }
     fetchData();
   }, [props.chat_id]);
@@ -129,6 +143,7 @@ export const ChatWindow = (props) => {
         time: new Date(),
       };
       updateChat(currentChat, data);
+      setSeen(false);
       setMeassages([...messages, data]);
       setMsg("");
       setSelectedMsg(null);
@@ -166,9 +181,9 @@ export const ChatWindow = (props) => {
     <>
       {!chatData ? (
         <>
-          <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
+          {props.stop?<></>:<span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
             Loading...
-          </span>
+          </span>}
         </>
       ) : (
         <>
@@ -209,6 +224,7 @@ export const ChatWindow = (props) => {
                   own={userName === val.name}
                   scrollRef={scrollRef}
                   selectMsg={selectMsg}
+                  isSeen={seen}
                 />
               );
             })}
@@ -291,8 +307,9 @@ const getChat = async (chat_id) => {
     //   console.log(messages);
     return messages;
   } catch (err) {
-    console.log(err);
-    alert("user not found");
+    // console.log(err);
+    return false;
+    // alert("user not found");
   }
 };
 
