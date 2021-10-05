@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
+import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
 
 export const Friend = (props) => {
   var active = false;
@@ -33,6 +34,7 @@ export const Friend = (props) => {
                 to_user_name={props.data.to_user_name}
                 user_name={props.user_name}
                 lastMsg={val}
+                isSeen={props.data.seen}
               />
             );
           })}
@@ -49,14 +51,22 @@ const LastMsg = (props) => {
         <div className="flex justify-between">
           <h4 className="font-medium text-sm truncate">{props.to_user_name}</h4>
           <p className="text-xs text-light-401 truncate">
-            {props.lastMsg ? format(props.lastMsg.time) : ""}
+            {props.lastMsg
+              ? props.lastMsg.time
+                ? format(props.lastMsg.time)
+                : ""
+              : ""}
           </p>
         </div>
         {props.lastMsg ? (
           <div className="text-sm flex text-light-401">
             {props.lastMsg.name === props.user_name ? (
               <>
-                <CheckRoundedIcon fontSize="small"/>
+                {props.isSeen ? (
+                  <DoneAllRoundedIcon fontSize="small" />
+                ) : (
+                  <DoneRoundedIcon fontSize="small" />
+                )}
               </>
             ) : (
               <></>

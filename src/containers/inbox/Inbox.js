@@ -15,6 +15,7 @@ export const Inbox = (props) => {
   const [actives, setActives] = useState([]);
   const [friends, setFriends] = useState(props.user.chats_id);
   const [inMsg, setInMsg] = useState(null);
+  const [seen, setSeen] = useState(null);
 
   const socket = useRef();
 
@@ -29,19 +30,35 @@ export const Inbox = (props) => {
     });
     socket.current.on("getMessage", (data) => {
       setInMsg(data);
+      data.isSeen=false
+      setSeen(data)
+    });
+    socket.current.on("getSeen", (data) => {
+      setSeen(data);
     });
   }, [props.user]);
 
   useEffect(() => {
     if (inMsg) {
       const arr = friends;
-      const i = updateFriends(arr, inMsg);
+      const i = updateFriends(arr, inMsg, props.user.user_name);
       setInMsg(null);
-      if (i!==-1) {
-        setFriends([...friends], friends[i].lastMsg = inMsg);
+      if (i !== -1) {
+        setFriends([...friends], (friends[i].lastMsg = inMsg));
       }
     }
-  }, [inMsg, friends]);
+  }, [inMsg, friends, props.user]);
+ 
+  useEffect(() => {
+    if (seen) {
+      const arr = friends;
+      const i = updateFriends(arr, seen, props.user.user_name);
+      setSeen(null);
+      if (i !== -1) {
+        setFriends([...friends], (friends[i].seen = seen.isSeen));
+      }
+    }
+  }, [seen, friends, props.user]);
 
   const path = window.location.pathname.split("/").slice(2, 4);
 
@@ -70,7 +87,7 @@ export const Inbox = (props) => {
 
   const logout = () => {
     Cookies.remove("token");
-    window.location.reload()
+    window.location.reload();
   };
 
   return (
@@ -211,24 +228,17 @@ const sortTime = (chats_id) => {
   return chats;
 };
 
-const updateFriends = (friends, message) => {
+const updateFriends = (friends, data, user_name) => {
+  // console.log(data)
   for (let i = 0; i < friends.length; i++) {
-    if (friends[i].to_user_name === message.from_user_name) {
-      // friends[i].lastMsg = message;
+    if (
+      friends[i].to_user_name === data.from_user_name &&
+      friends[i].to_user_name !== user_name
+    ) {
+      return i;
+    } else if (friends[i].to_user_name === data.to_user_name) {
       return i;
     }
   }
   return -1;
-  // console.log(friends);
-  // return friends;
 };
-
-// inMsg format
-// {
-//   from_user_name: "test",
-//   to_user_name: "mukul",
-//   message: "rendom msg from test",
-//   name: "test",
-//   reply: null,
-//   time: "2021-10-04T11:54:59.450Z",
-// }

@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
 import SendIcon from "@mui/icons-material/Send";
+import { format } from "timeago.js";
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats/";
@@ -47,16 +48,17 @@ export const ChatWindow = (props) => {
   // inform socket io that user has joined
   useEffect(() => {
     if (userName) {
-      socket.current.emit("addUser", { user_name: userName, user_id: "data" });
+      socket.current.emit("addUser", { user_name: userName });
     }
   }, [userName]);
 
   useEffect(() => {
     socket.current.on("getUsers", (users) => {
-      setActives(users)
+      setActives(users);
     });
   }, [currentChat]);
 
+  // find whether friend is active or not
   useEffect(() => {
     setIsActives(false);
     for (let i = 0; i < actives.length; i++) {
@@ -77,8 +79,24 @@ export const ChatWindow = (props) => {
   useEffect(() => {
     if (inMsg && currentChat === inMsg.from_user_name) {
       setMeassages((prev) => [...prev, inMsg]);
+      socket.current.emit("seen", {
+        from_user_name: userName,
+        to_user_name: currentChat,
+        name: userName,
+        isSeen: true,
+      });
     }
-  }, [inMsg, currentChat]);
+  }, [inMsg, currentChat, userName]);
+
+  // send seen status
+  useEffect(() => {
+    socket.current.emit("seen", {
+      from_user_name: userName,
+      to_user_name: currentChat,
+      name: userName,
+      isSeen: true,
+    });
+  }, [currentChat, userName]);
 
   // fetch chat data
   useEffect(() => {
@@ -163,7 +181,15 @@ export const ChatWindow = (props) => {
             </Link>
             <div className="relative grid justify-items-center">
               <h3>{currentChat}</h3>
-              {isActive?<div className="text-xsm">online</div>:<></>}
+              {isActive ? (
+                <div className="text-xsm">online</div>
+              ) : chatData.lastSeen ? (
+                <div className="text-xsm">
+                  {"Active " + format(chatData.lastSeen)}
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
             <div onClick={() => info()} className="cursor-pointer">
               <InfoIcon />
