@@ -5,12 +5,17 @@ import { Redirect, Link } from "react-router-dom";
 const URL = process.env.REACT_APP_SERVER + "/signin";
 
 export default class Signin extends React.Component {
-  state = {
-    islogin: false,
-    data: null,
-    user_name: "",
-    password: "",
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      islogin: false,
+      data: null,
+      user_name: "",
+      password: "",
+    };
+    this.inputUserNameRef = React.createRef();
+    this.inputPasswordRef = React.createRef();
+  }
   submit = async () => {
     const res = await fetch(URL, {
       // login
@@ -33,8 +38,13 @@ export default class Signin extends React.Component {
       // console.log(data)
       alert(data.error);
       this.setState({ user_name: "", password: "" });
+      this.inputUserNameRef.current.focus();
     }
   };
+
+  componentDidMount() {
+    this.inputUserNameRef.current.focus();
+  }
 
   render() {
     return (
@@ -52,10 +62,14 @@ export default class Signin extends React.Component {
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-light-201"
                       type="text"
                       placeholder=" username"
+                      ref={this.inputUserNameRef}
                       value={this.state.user_name}
                       onChange={(e) => {
                         this.setState({ user_name: e.target.value });
                       }}
+                      onKeyDownCapture={(e) =>
+                        e.key === "Enter" ? this.inputPasswordRef.current.focus() : null
+                      }
                     />
                   </div>
                   <div className="w-full">
@@ -63,6 +77,7 @@ export default class Signin extends React.Component {
                       className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-light-201"
                       type="password"
                       placeholder=" Password"
+                      ref={this.inputPasswordRef}
                       value={this.state.password}
                       onChange={(e) => {
                         this.setState({ password: e.target.value });

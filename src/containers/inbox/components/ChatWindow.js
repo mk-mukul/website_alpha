@@ -32,6 +32,7 @@ export const ChatWindow = (props) => {
 
   const socket = useRef();
   const scrollRef = useRef();
+  const inputMessageRef = useRef();
 
   // get message from socket io
   useEffect(() => {
@@ -146,10 +147,15 @@ export const ChatWindow = (props) => {
     };
   }, [inMsg, currentChat, userName]);
 
-  // send seen status 
+  // send seen status
   useEffect(() => {
     let unMounted = false;
-    if (currentChat&&!unMounted&&messages[messages.length-1].name!==userName&&userName) {
+    if (
+      currentChat &&
+      !unMounted &&
+      messages[messages.length - 1].name !== userName &&
+      userName
+    ) {
       socket.current.emit("seen", {
         from_user_name: userName,
         to_user_name: currentChat,
@@ -167,7 +173,7 @@ export const ChatWindow = (props) => {
       unMounted = true;
     };
   }, [currentChat, userName, messages]);
-  
+
   // fetch chat data
   useEffect(() => {
     let unMounted = false;
@@ -184,6 +190,8 @@ export const ChatWindow = (props) => {
           setUserName(data.chats_of.owner);
           setSeen(data.seen);
         }
+        inputMessageRef.current.focus();
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
       } catch (err) {
         console.log(err);
       }
@@ -218,6 +226,7 @@ export const ChatWindow = (props) => {
       setMsg("");
       setSelectedMsg(null);
     }
+    inputMessageRef.current.focus();
   };
 
   // send live typing...
@@ -248,6 +257,10 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     if (!unMounted) {
       setSelectedMsg(data);
+      inputMessageRef.current.focus();
+      setTimeout(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     }
     return () => {
       unMounted = true;
@@ -279,7 +292,7 @@ export const ChatWindow = (props) => {
             >
               <ArrowBackIosNewRoundedIcon />
             </Link>
-            <div className="relative grid justify-items-center">
+            <div className="relative grid justify-items-center cursor-default">
               <h3>{currentChat}</h3>
               {isActive ? (
                 <div className="text-xsm">online</div>
@@ -291,7 +304,7 @@ export const ChatWindow = (props) => {
                 <></>
               )}
             </div>
-            <div onClick={() => info()} className="cursor-pointer">
+            <div onClick={() => info()} className="cursor-not-allowed ">
               <InfoIcon />
             </div>
           </div>
@@ -328,51 +341,53 @@ export const ChatWindow = (props) => {
               <></>
             )}
           </div>
-          {selectedMsg ? (
-            <>
-              <div className="clear-both px-3 py-1 bg-background-301">
-                <div className="flex text-sm justify-between text-light-301 opacity-60">
-                  {selectedMsg.name === userName ? "you" : selectedMsg.name}
-                  <div
-                    onClick={() => {
-                      setSelectedMsg(null);
-                    }}
-                    className="mr-1"
-                  >
-                    <ClearRoundedIcon />
+
+          <div>
+            {selectedMsg ? (
+              <>
+                <div className="clear-both px-3 py-1 bg-background-301">
+                  <div className="flex text-sm justify-between items-center text-light-301 opacity-60">
+                    {selectedMsg.name === userName ? "you" : selectedMsg.name}
+                    <div
+                      onClick={() => {
+                        setSelectedMsg(null);
+                        inputMessageRef.current.focus();
+                      }}
+                      className="mr-1 cursor-pointer"
+                    >
+                      <ClearRoundedIcon fontSize="medium" />
+                    </div>
+                  </div>
+                  <div className="truncate text-sm pt-1 pb-2 text-light-101 ">
+                    {selectedMsg.message}
                   </div>
                 </div>
-                <div className="truncate text-sm text-light-101 ">
-                  {selectedMsg.message}
-                </div>
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
-          <form
-            className=" bottom-0 sm:static w-full flex "
-            id="chats-send-container"
-          >
-            <input
-              className="flex-grow p-2.5"
-              type="text"
-              placeholder=" Message..."
-              value={msg}
-              onChange={(e) => setMsg(e.currentTarget.value)}
-              id="chats-messageInp"
-              onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
-            />
-            <button
-              className="px-4 border-none rounded-none text-light-101 bg-background-301"
-              id="chats-btn"
-              onClick={(e) => {
-                submit(e);
-              }}
-            >
-              <SendIcon />
-            </button>
-          </form>
+              </>
+            ) : (
+              <></>
+            )}
+            <form className=" bottom-0 w-full flex " id="chats-send-container">
+              <input
+                className="flex-grow p-2.5"
+                type="text"
+                placeholder=" Message..."
+                ref={inputMessageRef}
+                value={msg}
+                onChange={(e) => setMsg(e.currentTarget.value)}
+                id="chats-messageInp"
+                onKeyDownCapture={(e) => (e.key === "Enter" ? submit(e) : null)}
+              />
+              <button
+                className="px-4 border-none rounded-none text-light-101 bg-background-301"
+                id="chats-btn"
+                onClick={(e) => {
+                  submit(e);
+                }}
+              >
+                <SendIcon />
+              </button>
+            </form>
+          </div>
         </>
       )}
     </>

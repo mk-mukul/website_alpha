@@ -150,11 +150,13 @@ export const Inbox = (props) => {
               " chat_list z-50 sm:z-0 h-screen sm:h-auto w-screen sm:w-auto bg-background-701 sm:border-r-2 sm:flex flex-col"
             }
           >
-            <div className="fixed z-50 w-full font-semibold sm:relative flex justify-between bg-background-801 text-light-101 px-3 py-3">
+            <div className=" z-50 w-full font-semibold sm:relative flex justify-between bg-background-801 text-light-101 px-3 py-3">
               <Link to={process.env.PUBLIC_URL + "/profile/"}>
                 <div className="h-6 w-6 relative rounded-full bg-white"></div>
               </Link>
-              <h3>{props.user.user_name}</h3>
+              <Link to={process.env.PUBLIC_URL + "/inbox/"}>
+                <h3 className="cursor-pointer">{props.user.user_name}</h3>
+              </Link>
               <Link to={process.env.PUBLIC_URL + "/"}>
                 <LogoutIcon
                   className="cursor-pointer"
@@ -163,7 +165,7 @@ export const Inbox = (props) => {
               </Link>
             </div>
 
-            <div className="overflow-y-auto w-screen sm:w-60 pt-12 sm:pt-0">
+            <div className="overflow-y-auto w-screen sm:w-60">
               {friends ? (
                 sortTime(friends).map((val, ind) => {
                   return (
@@ -288,7 +290,10 @@ const updateFriends = (friends, data, user_name) => {
       friends[i].to_user_name !== user_name
     ) {
       return i;
-    } else if (friends[i].to_user_name === data.to_user_name) {
+    }
+  }
+  for (let i = 0; i < friends.length; i++) {
+    if (friends[i].to_user_name === data.to_user_name) {
       return i;
     }
   }

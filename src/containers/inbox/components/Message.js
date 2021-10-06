@@ -53,7 +53,7 @@ export const Message = (props) => {
               <div
                 onClick={() => showReply()}
                 className={
-                  " px-3 pb-1 border-black rounded-xl cursor-default " + reply
+                  " px-3 pb-1 border-black rounded-xl cursor-pointer " + reply
                 }
               >
                 <p className="text-xs text-light-701">
@@ -75,14 +75,14 @@ export const Message = (props) => {
                 time();
               }}
             >
-              <p>{props.data.message}</p>
+              <p className="">{props.data.message}</p>
             </div>
           </div>
           {props.friend ? (
             <></>
           ) : (
             <div
-              className="flex text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
+              className="flex cursor-pointer text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
               onClick={() => {
                 props.selectMsg(props.data);
               }}
