@@ -140,6 +140,7 @@ export const ChatWindow = (props) => {
         to_user_name: currentChat,
         name: userName,
         isSeen: true,
+        lastMsg: "self"
       });
     }
     return () => {
@@ -154,6 +155,7 @@ export const ChatWindow = (props) => {
     if (
       currentChat &&
       !unMounted &&
+      currentChat===lastMsg.name&&
       lastMsg.name !== userName &&
       userName
     ) {
