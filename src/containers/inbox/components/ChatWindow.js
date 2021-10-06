@@ -127,7 +127,7 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     if (inMsg && currentChat === inMsg.from_user_name) {
       if (!unMounted) {
-        setMeassages((prev) => [...prev, inMsg]);
+        setMeassages((prev) => [inMsg, ...prev]);
       }
       socket.current.emit("seen", {
         from_user_name: userName,
@@ -185,13 +185,15 @@ export const ChatWindow = (props) => {
         }
         if (!unMounted) {
           setChatData(data);
-          setMeassages(data.chat_data);
+          setMeassages(reverseArr(data.chat_data));
           setCurrentChat(data.chats_of.with);
           setUserName(data.chats_of.owner);
           setSeen(data.seen);
         }
         inputMessageRef.current.focus();
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 1000);
       } catch (err) {
         console.log(err);
       }
@@ -222,7 +224,7 @@ export const ChatWindow = (props) => {
       };
       updateChat(currentChat, data);
       setSeen(false);
-      setMeassages([...messages, data]);
+      setMeassages([data, ...messages]);
       setMsg("");
       setSelectedMsg(null);
     }
@@ -254,13 +256,13 @@ export const ChatWindow = (props) => {
 
   // set delected message for reply
   const selectMsg = (data) => {
+    inputMessageRef.current.focus();
     let unMounted = false;
     if (!unMounted) {
       setSelectedMsg(data);
-      inputMessageRef.current.focus();
       setTimeout(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      }, 1000);
     }
     return () => {
       unMounted = true;
@@ -309,25 +311,9 @@ export const ChatWindow = (props) => {
             </div>
           </div>
           <div
-            className="flex-grow pt-16 pb-2 overflow-y-auto"
+            className="flex-grow flex flex-col-reverse pt-16 pb-2 overflow-y-auto"
             id="scrollBottom"
           >
-            {messages.map((val, ind) => {
-              const last = messages.length === ind + 1;
-              const own = userName === val.name;
-              return (
-                <Message
-                  key={ind}
-                  last={last}
-                  user={userName}
-                  data={val}
-                  own={own}
-                  scrollRef={scrollRef}
-                  selectMsg={selectMsg}
-                  isSeen={seen}
-                />
-              );
-            })}
             {msgLive.message ? (
               <>
                 <Message
@@ -340,6 +326,24 @@ export const ChatWindow = (props) => {
             ) : (
               <></>
             )}
+            {messages.map((val, ind) => {
+              const last = messages.length === ind + 1;
+              const own = userName === val.name;
+              const first = ind === 0;
+              return (
+                <Message
+                  key={ind}
+                  first={first}
+                  last={last}
+                  user={userName}
+                  data={val}
+                  own={own}
+                  scrollRef={scrollRef}
+                  selectMsg={selectMsg}
+                  isSeen={seen}
+                />
+              );
+            })}
           </div>
 
           <div>
@@ -393,6 +397,16 @@ export const ChatWindow = (props) => {
     </>
   );
 };
+
+
+const reverseArr = (arr) => {
+  const reverseArray = [];
+  for (let i = arr.length-1; i >= 0; i--) {
+    reverseArray.push(arr[i])
+  }
+  // console.log(reverseArray);
+  return reverseArray;
+}
 
 const getChat = async (chat_id) => {
   const token = Cookies.get("token");

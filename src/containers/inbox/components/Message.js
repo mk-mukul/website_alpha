@@ -22,14 +22,14 @@ export const Message = (props) => {
     classes2 = "bg-background-201";
   }
 
-  const [isTime, setIsTime] = useState(props.last);
+  const [isTime, setIsTime] = useState(props.first);
   const time = () => {
     isTime ? setIsTime(false) : setIsTime(true);
-    // console.log(props.last && !props.isSeen)
+    // console.log(props.first && !props.isSeen)
   };
   useEffect(() => {
-    setIsTime(props.last && !props.isSeen);
-  }, [props.last, props.isSeen]);
+    setIsTime(props.first && !props.isSeen);
+  }, [props.first, props.isSeen]);
 
   const [isReply, setIsReply] = useState("truncate");
   const showReply = () => {
@@ -39,7 +39,7 @@ export const Message = (props) => {
   return (
     <>
       <div
-        ref={props.last ? props.scrollRef : null}
+        ref={props.first ? props.scrollRef : null}
         className={"w-full clear-both mb-1 px-2"}
       >
         <div className={"flex " + classes}>
@@ -107,7 +107,7 @@ export const Message = (props) => {
               </>
             ) : (
               <>
-                {props.last && props.isSeen && props.own ? (
+                {props.first && props.isSeen && props.own ? (
                   <div className="flex justify-end">seen</div>
                 ) : (
                   ""
