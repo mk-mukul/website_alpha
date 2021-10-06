@@ -150,10 +150,11 @@ export const ChatWindow = (props) => {
   // send seen status
   useEffect(() => {
     let unMounted = false;
+    const lastMsg = messages[0];
     if (
       currentChat &&
       !unMounted &&
-      messages[messages.length - 1].name !== userName &&
+      lastMsg.name !== userName &&
       userName
     ) {
       socket.current.emit("seen", {
@@ -167,6 +168,7 @@ export const ChatWindow = (props) => {
         to_user_name: currentChat,
         name: userName,
         isSeen: true,
+        lastMsg: lastMsg,
       });
     }
     return () => {
@@ -398,15 +400,14 @@ export const ChatWindow = (props) => {
   );
 };
 
-
 const reverseArr = (arr) => {
   const reverseArray = [];
-  for (let i = arr.length-1; i >= 0; i--) {
-    reverseArray.push(arr[i])
+  for (let i = arr.length - 1; i >= 0; i--) {
+    reverseArray.push(arr[i]);
   }
   // console.log(reverseArray);
   return reverseArray;
-}
+};
 
 const getChat = async (chat_id) => {
   const token = Cookies.get("token");

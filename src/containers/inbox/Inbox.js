@@ -43,8 +43,11 @@ export const Inbox = (props) => {
       });
       socket.current.on("getSelf", (data) => {
         if (data.from_user_name === props.user.user_name) {
-          setSeen(data);
-          // console.log("self")
+          if (data.to_user_name===data.lastMsg.name) {
+            setSeen(data);
+          }
+          // console.log(data.to_user_name===data.lastMsg.name);
+          // console.log(data);
         }
         // console.log(data)
       });
