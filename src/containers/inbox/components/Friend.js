@@ -13,10 +13,17 @@ export const Friend = (props) => {
       break;
     }
   }
+  const mySeen = props.data.seen;
+  // const [mySeen, setMySeen] = useState(props.data.seen);
+  // const setSeen = () => {
+    // if (props.data.lastMsg.name!==props.user_name) {
+      // setMySeen(true);
+    // }
+  // }
 
   return (
     <>
-      <Link to={props.data.chat_id} className="">
+      <Link to={props.data.chat_id} className="" >
         <div ref={props.scrollRef?props.scrollRef:null} className="flex cursor-pointer mt-0.5 px-2 py-2 hover:bg-background-301 text-light-101">
           <div className="h-10 w-10 flex-shrink-0 relative rounded-full bg-light-301">
             {active ? (
@@ -35,7 +42,8 @@ export const Friend = (props) => {
                 user_name={props.user_name}
                 lastMsg={val}
                 isSeen={props.data.seen}
-              />
+                mySeen={mySeen}
+                />
             );
           })}
         </div>
@@ -45,11 +53,20 @@ export const Friend = (props) => {
 };
 
 const LastMsg = (props) => {
+  let seenClass = ""
+
+  if (props.lastMsg) {
+    seenClass = (props.mySeen||props.lastMsg.name === props.user_name)? "text-light-401" : "font-medium text-light-201";
+  }
+  // if (props.lastMsg&&(props.isSeen || props.lastMsg.name === props.user_name)) {
+  //   seenClass = "font-medium text-light-201";
+  //   console.log("props.isSeen")
+  // }
   return (
     <>
       <div className="pl-2 flex-grow w-20">
         <div className="flex justify-between">
-          <h4 className="font-medium text-sm truncate">{props.to_user_name}</h4>
+          <h4 className="font-bold text-sm truncate">{props.to_user_name}</h4>
           <p className="text-xs text-light-401 truncate">
             {props.lastMsg
               ? props.lastMsg.time
@@ -71,7 +88,7 @@ const LastMsg = (props) => {
             ) : (
               <></>
             )}
-            <p className="truncate">{props.lastMsg.message}</p>
+            <p className={"truncate " + seenClass}>{props.lastMsg.message}</p>
           </div>
         ) : (
           <></>

@@ -53,7 +53,7 @@ export const ChatWindow = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, []);
 
   // inform socket io that user has joined
@@ -66,7 +66,7 @@ export const ChatWindow = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [userName]);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const ChatWindow = (props) => {
         }
       });
       socket.current.on("getSeen", (data) => {
-        if (data.from_user_name===currentChat) {
+        if (data.from_user_name === currentChat) {
           if (!unMounted) {
             setSeen(data);
           }
@@ -87,7 +87,7 @@ export const ChatWindow = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [currentChat]);
 
   // find whether friend is active or not
@@ -96,35 +96,35 @@ export const ChatWindow = (props) => {
     if (!unMounted) {
       setIsActives(false);
     }
-      for (let i = 0; i < actives.length; i++) {
-        if (actives[i].user_name === currentChat) {
-          if (!unMounted) {
-            setIsActives(true);
-          }
+    for (let i = 0; i < actives.length; i++) {
+      if (actives[i].user_name === currentChat) {
+        if (!unMounted) {
+          setIsActives(true);
         }
       }
+    }
     return () => {
       unMounted = true;
-    }
+    };
   }, [currentChat, actives]);
 
   // display live typing...
   useEffect(() => {
     let unMounted = false;
-    if ((inMsgLive && currentChat === inMsgLive.from_user_name)) {
+    if (inMsgLive && currentChat === inMsgLive.from_user_name) {
       if (!unMounted) {
         setMsgLive(inMsgLive);
       }
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [inMsgLive, currentChat]);
 
   // desplay new message
   useEffect(() => {
     let unMounted = false;
-    if ((inMsg && currentChat === inMsg.from_user_name)) {
+    if (inMsg && currentChat === inMsg.from_user_name) {
       if (!unMounted) {
         setMeassages((prev) => [...prev, inMsg]);
       }
@@ -134,22 +134,40 @@ export const ChatWindow = (props) => {
         name: userName,
         isSeen: true,
       });
+      socket.current.emit("self", {
+        from_user_name: userName,
+        to_user_name: currentChat,
+        name: userName,
+        isSeen: true,
+      });
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [inMsg, currentChat, userName]);
 
-  // send seen status
+  // send seen status 
   useEffect(() => {
-    socket.current.emit("seen", {
-      from_user_name: userName,
-      to_user_name: currentChat,
-      name: userName,
-      isSeen: true,
-    });
-  }, [currentChat, userName]);
-
+    let unMounted = false;
+    if (currentChat&&!unMounted&&messages[messages.length-1].name!==userName&&userName) {
+      socket.current.emit("seen", {
+        from_user_name: userName,
+        to_user_name: currentChat,
+        name: userName,
+        isSeen: true,
+      });
+      socket.current.emit("self", {
+        from_user_name: userName,
+        to_user_name: currentChat,
+        name: userName,
+        isSeen: true,
+      });
+    }
+    return () => {
+      unMounted = true;
+    };
+  }, [currentChat, userName, messages]);
+  
   // fetch chat data
   useEffect(() => {
     let unMounted = false;
@@ -157,7 +175,7 @@ export const ChatWindow = (props) => {
       try {
         const data = await getChat(props.chat_id);
         if (!data) {
-          return
+          return;
         }
         if (!unMounted) {
           setChatData(data);
@@ -167,13 +185,13 @@ export const ChatWindow = (props) => {
           setSeen(data.seen);
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
     fetchData();
     return () => {
       unMounted = true;
-    }
+    };
   }, [props.chat_id]);
 
   // send message
@@ -222,7 +240,7 @@ export const ChatWindow = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [messages, msgLive]);
 
   // set delected message for reply
@@ -233,7 +251,7 @@ export const ChatWindow = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   };
 
   const info = () => {
@@ -244,9 +262,13 @@ export const ChatWindow = (props) => {
     <>
       {!chatData ? (
         <>
-          {props.stop?<></>:<span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
-            Loading...
-          </span>}
+          {props.stop ? (
+            <></>
+          ) : (
+            <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">
+              Loading...
+            </span>
+          )}
         </>
       ) : (
         <>
@@ -373,7 +395,7 @@ const getChat = async (chat_id) => {
     return messages;
   } catch (err) {
     // console.log(err);
-    
+
     return false;
     // alert("user not found");
   }

@@ -37,12 +37,21 @@ export const Inbox = (props) => {
         setSeen(data);
       });
       socket.current.on("getSeen", (data) => {
-        setSeen(data);
+        if (data.from_user_name !== props.user.user_name) {
+          setSeen(data);
+        }
+      });
+      socket.current.on("getSelf", (data) => {
+        if (data.from_user_name === props.user.user_name) {
+          setSeen(data);
+          // console.log("self")
+        }
+        // console.log(data)
       });
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [props.user]);
 
   useEffect(() => {
@@ -59,7 +68,7 @@ export const Inbox = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [inMsg, friends, props.user]);
 
   useEffect(() => {
@@ -76,7 +85,7 @@ export const Inbox = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [seen, friends, props.user]);
 
   const path = window.location.pathname.split("/").slice(2, 4);
@@ -93,10 +102,11 @@ export const Inbox = (props) => {
         setChat_windoe("hidden");
         setChat_list("flex");
       }
+      // setFriends(prev=>[...prev]);
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [path]);
 
   const addFriend = async (e) => {
@@ -122,8 +132,13 @@ export const Inbox = (props) => {
     }
     return () => {
       unMounted = true;
-    }
+    };
   }, [inMsg]);
+
+  // const click = ()=>{
+  // console.log(window.location)
+  // console.log("clicked")
+  // }
 
   return (
     <>
@@ -157,7 +172,8 @@ export const Inbox = (props) => {
                       data={val}
                       user_name={props.user.user_name}
                       actives={actives}
-                      scrollRef={ind===0?scrollRef:null}
+                      scrollRef={ind === 0 ? scrollRef : null}
+                      // click={click}
                     />
                   );
                 })
