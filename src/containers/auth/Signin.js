@@ -53,7 +53,7 @@ export default class Signin extends React.Component {
           <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
         ) : (
           <>
-            <section className="w-screen min-h-screen flex justify-center items-center text-light-101 bg-background-101">
+            <section className="pt-4 pb-4 min-h-screen flex justify-center items-center text-light-101 bg-background-101">
               <div className="flex items-center w-56 flex-col">
                 <h2 className="mb-2 font-medium">Log In</h2>
                 <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">

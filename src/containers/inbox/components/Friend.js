@@ -5,6 +5,7 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
 
 export const Friend = (props) => {
+
   var active = false;
   for (let i = 0; i < props.actives.length; i++) {
     active =
@@ -13,13 +14,24 @@ export const Friend = (props) => {
       break;
     }
   }
-  const mySeen = props.data.seen;
-  // const [mySeen, setMySeen] = useState(props.data.seen);
-  // const setSeen = () => {
-  // if (props.data.lastMsg.name!==props.user_name) {
-  // setMySeen(true);
-  // }
-  // }
+  // console.log(props.data)
+//   {
+//     "chat_id": "61490802a75fae2e5a28f38e614918442ace0cf953eac166",
+//     "chat_with": {
+//         "$oid": "614918442ace0cf953eac166"
+//     },
+//     "to_user_name": "test",
+//     "lastMsg": {
+//         "message": "xczxcvasd",
+//         "name": "test",
+//         "reply": null,
+//         "time": "2021-10-07T19:31:31.045Z"
+//     },
+//     "seen": false,
+//     "seenTime": {
+//         "$date": "2021-10-07T10:20:39.372Z"
+//     }
+// }
 
   return (
     <>
@@ -37,18 +49,7 @@ export const Friend = (props) => {
               <></>
             )}
           </div>
-          {[props.data.lastMsg].map((val, ind) => {
-            return (
-              <LastMsg
-                key={ind}
-                to_user_name={props.data.to_user_name}
-                user_name={props.user_name}
-                lastMsg={val}
-                isSeen={props.data.seen}
-                mySeen={mySeen}
-              />
-            );
-          })}
+          <LastMsg user_name={props.user_name} data={props.data} />
         </div>
       </Link>
     </>
@@ -56,36 +57,37 @@ export const Friend = (props) => {
 };
 
 const LastMsg = (props) => {
-  let seenClass = "";
+  let seenClass = "text-light-401";
 
-  if (props.lastMsg) {
-    seenClass =
-      props.mySeen || props.lastMsg.name === props.user_name
+  if (props.data.lastMsg) {
+    if (props.data.lastMsg.name === props.data.to_user_name) {
+      seenClass = props.data.mySeen
         ? "text-light-401"
-        : "font-medium text-light-201 pl-2";
+        : "font-medium text-light-201 pl-3";
+    }
   }
-  // if (props.lastMsg&&(props.isSeen || props.lastMsg.name === props.user_name)) {
-  //   seenClass = "font-medium text-light-201";
-  //   console.log("props.isSeen")
-  // }
+  // console.log(props.data.to_user_name)
+  // console.log(props.data.lastMsg.name)
   return (
     <>
       <div className="pl-2 flex-grow w-20">
         <div className="flex justify-between">
-          <h4 className="font-bold text-sm truncate">{props.to_user_name}</h4>
+          <h4 className="font-bold text-sm truncate">
+            {props.data.to_user_name}
+          </h4>
           <p className="text-xs text-light-401 truncate">
-            {props.lastMsg
-              ? props.lastMsg.time
-                ? format(props.lastMsg.time)
+            {props.data.lastMsg
+              ? props.data.lastMsg.time
+                ? format(props.data.lastMsg.time)
                 : ""
               : ""}
           </p>
         </div>
-        {props.lastMsg ? (
+        {props.data.lastMsg ? (
           <div className="text-sm relative flex text-center text-light-401">
-            {props.lastMsg.name === props.user_name ? (
+            {props.data.lastMsg.name !== props.data.to_user_name ? (
               <>
-                {props.isSeen ? (
+                {props.data.seen ? (
                   <DoneAllRoundedIcon
                     fontSize="small"
                     className="text-blue-500"
@@ -96,17 +98,19 @@ const LastMsg = (props) => {
               </>
             ) : (
               <>
-                {props.mySeen || props.lastMsg.name === props.user_name ? (
+                {props.data.mySeen ? (
                   <></>
                 ) : (
                   <>
-                    <div className="h-1 w-1 absolute bottom-1.5 rounded-full bg-light-201" ></div>
+                    <div className="h-2 w-2 absolute bottom-1 rounded-full bg-light-201"></div>
                   </>
                 )}
               </>
             )}
 
-            <p className={"truncate " + seenClass}>{props.lastMsg.message}</p>
+            <p className={"truncate " + seenClass}>
+              {props.data.lastMsg.message}
+            </p>
           </div>
         ) : (
           <></>
@@ -115,9 +119,3 @@ const LastMsg = (props) => {
     </>
   );
 };
-
-// {props.mySeen || props.lastMsg.name === props.user_name ? (
-//   <><div>54646</div></>
-// ) : (
-//   <></>
-// )}

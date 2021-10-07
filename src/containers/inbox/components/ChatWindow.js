@@ -83,7 +83,8 @@ export const ChatWindow = (props) => {
       socket.current.on("getSeen", (data) => {
         if (data.from_user_name === currentChat) {
           if (!unMounted) {
-            setSeen(data);
+            setSeen(true);
+            setSeenTime(data.seenTime);
             console.log(data);
           }
         }
@@ -137,13 +138,16 @@ export const ChatWindow = (props) => {
         to_user_name: currentChat,
         name: userName,
         isSeen: true,
+        lastMsg: inMsg,
+        seenTime: new Date(),
+        from: "live",
       });
       socket.current.emit("self", {
         from_user_name: userName,
         to_user_name: currentChat,
         name: userName,
-        isSeen: true,
-        lastMsg: "self"
+        lastMsg: inMsg,
+        from: "live",
       });
     }
     return () => {
@@ -168,13 +172,15 @@ export const ChatWindow = (props) => {
         name: userName,
         isSeen: true,
         lastMsg: lastMsg,
+        seenTime: new Date(),
+        from: "open",
       });
       socket.current.emit("self", {
         from_user_name: userName,
         to_user_name: currentChat,
         name: userName,
-        isSeen: true,
         lastMsg: lastMsg,
+        from: "open",
       });
     }
     return () => {
@@ -433,7 +439,7 @@ const getChat = async (chat_id) => {
     //   console.log(messages);
     return messages;
   } catch (err) {
-    // console.log(err);
+    console.log(err);
 
     return false;
     // alert("user not found");

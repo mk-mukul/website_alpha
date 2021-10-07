@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
+import swal from 'sweetalert';
 
 const URL = process.env.REACT_APP_SERVER + "/signup";
 
@@ -39,7 +40,8 @@ export default class Signup extends React.Component {
       });
       const data = await res.json();
       if (data.token) {
-        alert("account created please login");
+        // alert("account created please login");
+        swal("Account created", "Please Login", "success");
         this.setState({
           name: "",
           user_name: "",
@@ -51,7 +53,7 @@ export default class Signup extends React.Component {
       } else {
         if (data.change==="name") {
           this.inputNameRef.current.focus();
-          alert(data.error)
+          swal(data.error)
         }
         if (data.change==="user_name") {
           this.inputUserNameRef.current.focus();
@@ -82,7 +84,7 @@ export default class Signup extends React.Component {
           <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
         ) : (
           <>
-            <section className="w-screen min-h-screen flex justify-center items-center text-light-101 bg-background-101">
+            <section className=" min-h-screen flex justify-center items-center text-light-101 bg-background-101">
               <div className="flex items-center w-56 flex-col">
                 <h2 className="mb-2 font-medium">Sign Up</h2>
                 <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">
