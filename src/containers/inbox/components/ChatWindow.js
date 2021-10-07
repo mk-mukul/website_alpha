@@ -151,7 +151,7 @@ export const ChatWindow = (props) => {
   // send seen status
   useEffect(() => {
     let unMounted = false;
-    const lastMsg = messages[0];
+    const lastMsg = messages.length>0?messages[0]:"";
     if (
       currentChat &&
       !unMounted &&
