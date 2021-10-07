@@ -108,7 +108,7 @@ export const Message = (props) => {
             ) : (
               <>
                 {props.first && props.isSeen && props.own ? (
-                  <div className="flex justify-end">seen</div>
+                  <div className="flex justify-end">seen {props.seenTime?format(props.seenTime):""}</div>
                 ) : (
                   ""
                 )}

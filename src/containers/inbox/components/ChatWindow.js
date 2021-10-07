@@ -29,6 +29,8 @@ export const ChatWindow = (props) => {
   const [actives, setActives] = useState([]);
   const [isActive, setIsActives] = useState(false);
   const [seen, setSeen] = useState(false);
+  const [mySeen, setMySeen] = useState(true);
+  const [seenTime, setSeenTime] = useState("");
 
   const socket = useRef();
   const scrollRef = useRef();
@@ -82,6 +84,7 @@ export const ChatWindow = (props) => {
         if (data.from_user_name === currentChat) {
           if (!unMounted) {
             setSeen(data);
+            console.log(data);
           }
         }
       });
@@ -153,7 +156,7 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     const lastMsg = messages.length>0?messages[0]:"";
     if (
-      currentChat &&
+      !mySeen &&
       !unMounted &&
       currentChat===lastMsg.name&&
       lastMsg.name !== userName &&
@@ -164,6 +167,7 @@ export const ChatWindow = (props) => {
         to_user_name: currentChat,
         name: userName,
         isSeen: true,
+        lastMsg: lastMsg,
       });
       socket.current.emit("self", {
         from_user_name: userName,
@@ -176,7 +180,7 @@ export const ChatWindow = (props) => {
     return () => {
       unMounted = true;
     };
-  }, [currentChat, userName, messages]);
+  }, [currentChat, userName, messages, mySeen]);
 
   // fetch chat data
   useEffect(() => {
@@ -193,6 +197,8 @@ export const ChatWindow = (props) => {
           setCurrentChat(data.chats_of.with);
           setUserName(data.chats_of.owner);
           setSeen(data.seen);
+          setSeenTime(data.updatedAt);
+          setMySeen(data.mySeen);
         }
         inputMessageRef.current.focus();
         setTimeout(() => {
@@ -345,6 +351,7 @@ export const ChatWindow = (props) => {
                   scrollRef={scrollRef}
                   selectMsg={selectMsg}
                   isSeen={seen}
+                  seenTime={seenTime}
                 />
               );
             })}
