@@ -31,6 +31,7 @@ export const ChatWindow = (props) => {
   const [seen, setSeen] = useState(false);
   const [mySeen, setMySeen] = useState(true);
   const [seenTime, setSeenTime] = useState("");
+  const [lastSeen, setLastSeen] = useState(null);
 
   const socket = useRef();
   const scrollRef = useRef();
@@ -113,6 +114,19 @@ export const ChatWindow = (props) => {
     };
   }, [currentChat, actives]);
 
+  // set active on offline
+  useEffect(() => {
+    let unMounted = false;
+    if (!unMounted) {
+      if (isActive === false) {
+        setLastSeen(new Date());
+      }
+    }
+    return () => {
+      unMounted = true;
+    };
+  }, [isActive]);
+
   // display live typing...
   useEffect(() => {
     let unMounted = false;
@@ -158,11 +172,11 @@ export const ChatWindow = (props) => {
   // send seen status
   useEffect(() => {
     let unMounted = false;
-    const lastMsg = messages.length>0?messages[0]:"";
+    const lastMsg = messages.length > 0 ? messages[0] : "";
     if (
       !mySeen &&
       !unMounted &&
-      currentChat===lastMsg.name&&
+      currentChat === lastMsg.name &&
       lastMsg.name !== userName &&
       userName
     ) {
@@ -193,7 +207,7 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     async function fetchData() {
       try {
-        const data = await getChat(props.chat_id);
+        const data = await getChat(props.chat_id, setLastSeen);
         if (!data) {
           return;
         }
@@ -313,11 +327,14 @@ export const ChatWindow = (props) => {
             <div className="relative grid justify-items-center cursor-default">
               <h3>{currentChat}</h3>
               {isActive ? (
-                <div className="text-xsm">online</div>
+                <>
+                  <div className="pl-2.5 text-xsm relative flex">
+                    <div className="w-1.5 h-1.5 absolute rounded-full top-1 left-0 bg-green-400"></div>
+                    Active now
+                  </div>
+                </>
               ) : chatData.lastSeen ? (
-                <div className="text-xsm">
-                  {"Active " + format(chatData.lastSeen)}
-                </div>
+                <div className="text-xsm">{"Active " + format(lastSeen)}</div>
               ) : (
                 <></>
               )}
@@ -424,7 +441,7 @@ const reverseArr = (arr) => {
   return reverseArray;
 };
 
-const getChat = async (chat_id) => {
+const getChat = async (chat_id, setLastSeen) => {
   const token = Cookies.get("token");
   try {
     const res = await fetch(GET_URL + chat_id, {
@@ -435,9 +452,9 @@ const getChat = async (chat_id) => {
         Authorization: token,
       },
     });
-    const messages = await res.json();
-    //   console.log(messages);
-    return messages;
+    const data = await res.json();
+    setLastSeen(data.lastSeen);
+    return data.chat;
   } catch (err) {
     console.log(err);
 
