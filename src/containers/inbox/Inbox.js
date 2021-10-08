@@ -6,9 +6,14 @@ import { ChatWindow } from "./components/ChatWindow";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import message_in from "../assets/sounds/message_in.mp3";
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
+const SETINGS_URL = process.env.REACT_APP_SERVER + "/update/settings";
 
 export const Inbox = (props) => {
   const [addFrndInp, setAddFrndInp] = useState("");
@@ -16,10 +21,11 @@ export const Inbox = (props) => {
   const [friends, setFriends] = useState(props.user.chats_id);
   // const [inMsg, setInMsg] = useState(null);
   const [getMessage, setGetMessage] = useState(null);
+  const [playSound, setPlaySound] = useState(props.user.settings.notificationSound);
+  const [isOptions, setIsOptions] = useState(false);
 
   const [seenData, setSeenData] = useState(null);
   const [mySeenData, setMySeenData] = useState(null);
-
 
   const socket = useRef();
   const scrollRef = useRef();
@@ -53,6 +59,7 @@ export const Inbox = (props) => {
   // update incoming message in friends list
   useEffect(() => {
     let unMounted = false;
+    const audio = new Audio(message_in);
     if (!unMounted) {
       if (getMessage) {
         const arr = friends;
@@ -62,8 +69,12 @@ export const Inbox = (props) => {
           data.lastMsg = getMessage;
           data.seen = false;
           data.mySeen = false;
-          // console.log(data)
+          // console.log(data.lastMsg.name)
           setFriends([...friends], (friends[i] = data));
+          if (data.lastMsg.name !== props.user.user_name && playSound) {
+            // audio.pause();
+            audio.play();
+          }
         }
         setGetMessage(null);
       }
@@ -71,7 +82,7 @@ export const Inbox = (props) => {
     return () => {
       unMounted = true;
     };
-  }, [getMessage, friends, props.user]);
+  }, [getMessage, friends, props.user, playSound]);
 
   // update seen by friends in message list
   useEffect(() => {
@@ -108,7 +119,6 @@ export const Inbox = (props) => {
       unMounted = true;
     };
   }, [mySeenData, friends, props.user]);
-
 
   // logic for mobile or small device
   const path = window.location.pathname.split("/").slice(2, 4);
@@ -157,6 +167,10 @@ export const Inbox = (props) => {
     };
   }, []);
 
+  const updateSoundSetting = () => {
+    updateSeetings("notificationSound", !playSound);
+    setPlaySound(!playSound)
+  }
 
   return (
     <>
@@ -175,12 +189,40 @@ export const Inbox = (props) => {
               <Link to={process.env.PUBLIC_URL + "/inbox/"}>
                 <h3 className="cursor-pointer">{props.user.user_name}</h3>
               </Link>
-              <Link to={process.env.PUBLIC_URL + "/"}>
-                <LogoutIcon
+              <div>
+                <div
                   className="cursor-pointer"
-                  onClick={() => logout()}
-                />
-              </Link>
+                  onClick={() => {
+                    setIsOptions((prev) => !prev);
+                  }}
+                >
+                  <MoreVertIcon />
+                </div>
+
+                <div className={isOptions ? "absolute" : "hidden"}>
+                  {isOptions ? (
+                    <>
+                      <div className="relative grid p-3 gap-1 right-3 rounded-sm bg-background-801" >
+                        <div className="flex" onClick={() => { updateSoundSetting() }}>
+                          {playSound ?
+                            <><VolumeUpIcon /></>
+                            :
+                            <><VolumeOffIcon /></>
+                          }
+                        </div>
+                        <Link to={process.env.PUBLIC_URL + "/"}>
+                          <LogoutIcon
+                            className="cursor-pointer"
+                            onClick={() => logout()}
+                          />
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="overflow-y-auto w-screen sm:w-60">
@@ -193,7 +235,7 @@ export const Inbox = (props) => {
                       // user_name={props.user.user_name}
                       actives={actives}
                       scrollRef={ind === 0 ? scrollRef : null}
-                      path={path[0] === "inbox" && path[1]?path[1]:null}
+                      path={path[0] === "inbox" && path[1] ? path[1] : null}
                     />
                   );
                 })
@@ -287,8 +329,8 @@ const sortTime = (chats_id) => {
       return a.lastMsg.time < b.lastMsg.time
         ? 1
         : b.lastMsg.time < a.lastMsg.time
-        ? -1
-        : 0;
+          ? -1
+          : 0;
     } else if (a.lastMsg && !b.lastMsg) {
       return -1;
     } else if (!a.lastMsg && b.lastMsg) {
@@ -317,3 +359,24 @@ const updateFriends = (friends, data, user_name) => {
   }
   return -1;
 };
+
+const updateSeetings = async (setting, value) => {
+  const token = Cookies.get("token");
+  try {
+    // const res =
+    await fetch(SETINGS_URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({setting, value}),
+    });
+    // const result = await res.json();
+    // console.log(res);
+  } catch (err) {
+    console.log(err);
+    alert("Something went wrong, Please Refress the page");
+  }
+}

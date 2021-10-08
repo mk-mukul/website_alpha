@@ -110,7 +110,7 @@ export const ChatWindow = (props) => {
           if (!unMounted) {
             setSeen(true);
             setSeenTime(data.seenTime);
-            console.log(data);
+            // console.log(data);
           }
         }
       });
