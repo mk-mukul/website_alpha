@@ -43,7 +43,6 @@ export const ChatWindow = (props) => {
     if (!unMounted) {
       socket.current = io(URL);
       socket.current.on("getMessage", (data) => {
-        // console.log(data)
         if (!unMounted) {
           setInMsg(data);
         }
@@ -143,7 +142,7 @@ export const ChatWindow = (props) => {
   // desplay new message
   useEffect(() => {
     let unMounted = false;
-    if (inMsg && currentChat === inMsg.from_user_name) {
+    if (inMsg && (currentChat === inMsg.from_user_name || userName === inMsg.from_user_name) ) {
       if (!unMounted) {
         setMeassages((prev) => [inMsg, ...prev]);
       }
@@ -284,7 +283,7 @@ export const ChatWindow = (props) => {
     };
   }, [messages, msgLive]);
 
-  // set delected message for reply
+  // set selected message for reply
   const selectMsg = (data) => {
     inputMessageRef.current.focus();
     let unMounted = false;
@@ -333,7 +332,7 @@ export const ChatWindow = (props) => {
                     Active now
                   </div>
                 </>
-              ) : chatData.lastSeen ? (
+              ) : lastSeen ? (
                 <div className="text-xsm">{"Active " + format(lastSeen)}</div>
               ) : (
                 <></>

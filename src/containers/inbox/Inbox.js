@@ -62,7 +62,7 @@ export const Inbox = (props) => {
           data.lastMsg = getMessage;
           data.seen = false;
           data.mySeen = false;
-          console.log(data)
+          // console.log(data)
           setFriends([...friends], (friends[i] = data));
         }
         setGetMessage(null);
