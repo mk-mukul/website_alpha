@@ -24,7 +24,7 @@ export const ChatWindow = (props) => {
     from_user_name: "",
     message: "",
   });
-  const [chatData, setChatData] = useState(null);
+  const [chatId, setChatId] = useState(null);
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [actives, setActives] = useState([]);
   const [isActive, setIsActives] = useState(false);
@@ -36,6 +36,25 @@ export const ChatWindow = (props) => {
   const socket = useRef();
   const scrollRef = useRef();
   const inputMessageRef = useRef();
+
+  useEffect(() => {
+    let unMounted = false;
+    if (!unMounted) {
+      if (chatId !== props.chat_id) {
+        setChatId(null);
+        setMeassages([]);
+        setCurrentChat("");
+        setUserName(null);
+        setSeen(false);
+        setSeenTime("");
+        setMySeen(true);
+        setLastSeen(null);
+      }
+    }
+    return () => {
+      unMounted = true;
+    };
+  }, [props.chat_id, chatId]);
 
   // get message from socket io
   useEffect(() => {
@@ -142,7 +161,11 @@ export const ChatWindow = (props) => {
   // desplay new message
   useEffect(() => {
     let unMounted = false;
-    if (inMsg && (currentChat === inMsg.from_user_name || userName === inMsg.from_user_name) ) {
+    if (
+      inMsg &&
+      (currentChat === inMsg.from_user_name ||
+        userName === inMsg.from_user_name)
+    ) {
       if (!unMounted) {
         setMeassages((prev) => [inMsg, ...prev]);
       }
@@ -211,7 +234,7 @@ export const ChatWindow = (props) => {
           return;
         }
         if (!unMounted) {
-          setChatData(data);
+          setChatId(data.chat_id);
           setMeassages(reverseArr(data.chat_data));
           setCurrentChat(data.chats_of.with);
           setUserName(data.chats_of.owner);
@@ -299,14 +322,15 @@ export const ChatWindow = (props) => {
   };
 
   const info = () => {
-    console.log(currentChat);
+    // console.log(chatId);
+    // console.log(props.chat_id);
   };
 
   return (
     <>
-      {!chatData ? (
+      {props.chat_id!==chatId ? (
         <>
-          {props.stop ? (
+          {false ? (
             <></>
           ) : (
             <span className="flex justify-center text-6xl mt-16 text-primary-101 p-3 opacity-50 cursor-default">

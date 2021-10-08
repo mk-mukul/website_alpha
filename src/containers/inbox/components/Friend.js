@@ -14,31 +14,18 @@ export const Friend = (props) => {
       break;
     }
   }
-  // console.log(props.data)
-//   {
-//     "chat_id": "61490802a75fae2e5a28f38e614918442ace0cf953eac166",
-//     "chat_with": {
-//         "$oid": "614918442ace0cf953eac166"
-//     },
-//     "to_user_name": "test",
-//     "lastMsg": {
-//         "message": "xczxcvasd",
-//         "name": "test",
-//         "reply": null,
-//         "time": "2021-10-07T19:31:31.045Z"
-//     },
-//     "seen": false,
-//     "seenTime": {
-//         "$date": "2021-10-07T10:20:39.372Z"
-//     }
-// }
+
+  let activeClass = "hover:bg-background-401 cursor-pointer"
+  if (props.data.chat_id===props.path) {
+    activeClass = "bg-background-301 cursor-default"
+  }
 
   return (
     <>
       <Link to={props.data.chat_id} className="">
         <div
-          ref={props.scrollRef ? props.scrollRef : null}
-          className="flex cursor-pointer mt-0.5 px-2 py-2 hover:bg-background-301 text-light-101"
+          ref={props.scrollRef ? props.scrollRef : null} 
+          className={"flex mt-0.5 px-2 py-2 text-light-101 "+activeClass}
         >
           <div className="h-10 w-10 flex-shrink-0 relative rounded-full bg-light-301">
             {active ? (

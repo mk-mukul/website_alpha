@@ -157,10 +157,6 @@ export const Inbox = (props) => {
     };
   }, []);
 
-  // const click = ()=>{
-  // console.log(window.location)
-  // console.log("clicked")
-  // }
 
   return (
     <>
@@ -197,7 +193,7 @@ export const Inbox = (props) => {
                       // user_name={props.user.user_name}
                       actives={actives}
                       scrollRef={ind === 0 ? scrollRef : null}
-                      // click={click}
+                      path={path[0] === "inbox" && path[1]?path[1]:null}
                     />
                   );
                 })
