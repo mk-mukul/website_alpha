@@ -49,6 +49,12 @@ export const ChatWindow = (props) => {
         setSeenTime("");
         setMySeen(true);
         setLastSeen(null);
+        setSelectedMsg(null);
+        setMsg("");
+        setMsgLive({
+          from_user_name: "",
+          message: "",
+        });
       }
     }
     return () => {
@@ -119,6 +125,10 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     if (!unMounted) {
       setIsActives(false);
+      setMsgLive({
+        from_user_name: "",
+        message: "",
+      });
     }
     for (let i = 0; i < actives.length; i++) {
       if (actives[i].user_name === currentChat) {
@@ -169,6 +179,7 @@ export const ChatWindow = (props) => {
       if (!unMounted) {
         setMeassages((prev) => [inMsg, ...prev]);
       }
+      setInMsg(null);
       socket.current.emit("seen", {
         from_user_name: userName,
         to_user_name: currentChat,
@@ -328,7 +339,7 @@ export const ChatWindow = (props) => {
 
   return (
     <>
-      {props.chat_id!==chatId ? (
+      {props.chat_id !== chatId ? (
         <>
           {false ? (
             <></>
