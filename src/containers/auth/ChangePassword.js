@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 
-const url = process.env.REACT_APP_SERVER + "/verification/";
+const url = process.env.REACT_APP_SERVER + "/resetPassword/";
 
-export const Verification = (props) => {
+export const ChangePassword = (props) => {
   const [email, setEmail] = useState("");
   const inputRef = React.createRef();
   const [status, setStatus] = useState(false);
@@ -63,7 +63,7 @@ export const Verification = (props) => {
                   submit();
                 }}
               >
-                Send Verification link
+                Send Password Link
               </button>
             </div>
           </div>

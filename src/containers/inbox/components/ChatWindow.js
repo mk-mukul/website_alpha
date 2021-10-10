@@ -10,7 +10,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { format } from "timeago.js";
 
 const URL = process.env.REACT_APP_SERVER;
-const GET_URL = process.env.REACT_APP_SERVER + "/add/chats/";
+const GET_URL = process.env.REACT_APP_SERVER + "/chats/";
 const SEND_URL = process.env.REACT_APP_SERVER + "/update/chat";
 
 export const ChatWindow = (props) => {
@@ -32,6 +32,8 @@ export const ChatWindow = (props) => {
   const [mySeen, setMySeen] = useState(true);
   const [seenTime, setSeenTime] = useState("");
   const [lastSeen, setLastSeen] = useState(null);
+  const [settings, setSettings] = useState({});
+  const [showTyping, setShowTyping] = useState(true);
 
   const socket = useRef();
   const scrollRef = useRef();
@@ -240,7 +242,7 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     async function fetchData() {
       try {
-        const data = await getChat(props.chat_id, setLastSeen);
+        const data = await getChat(props.chat_id, setLastSeen, setSettings);
         if (!data) {
           return;
         }
@@ -297,14 +299,16 @@ export const ChatWindow = (props) => {
   // send live typing...
   useEffect(() => {
     const to_user_name = currentChat;
-    socket.current.emit("sendMsgLive", {
-      from_user_name: userName,
-      to_user_name: to_user_name,
-      name: to_user_name,
-      message: msg,
-      reply: selectedMsg,
-    });
-  }, [msg, currentChat, userName, selectedMsg]);
+    if (showTyping) {
+      socket.current.emit("sendMsgLive", {
+        from_user_name: userName,
+        to_user_name: to_user_name,
+        name: to_user_name,
+        message: msg,
+        reply: selectedMsg,
+      });
+    }
+  }, [msg, currentChat, userName, selectedMsg, showTyping]);
 
   // automatic scroll
   useEffect(() => {
@@ -323,14 +327,24 @@ export const ChatWindow = (props) => {
     let unMounted = false;
     if (!unMounted) {
       setSelectedMsg(data);
-      setTimeout(() => {
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 1000);
+      // setTimeout(() => {
+      //   scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+      // }, 1000);
     }
     return () => {
       unMounted = true;
     };
   };
+
+  useEffect(() => {
+    let unMounted = false;
+    if (!unMounted) {
+      setShowTyping(settings.showTyping);
+    }
+    return () => {
+      unMounted = true;
+    };
+  }, [settings]);
 
   const info = () => {
     // console.log(chatId);
@@ -475,7 +489,7 @@ const reverseArr = (arr) => {
   return reverseArray;
 };
 
-const getChat = async (chat_id, setLastSeen) => {
+const getChat = async (chat_id, setLastSeen, setSettings) => {
   const token = Cookies.get("token");
   try {
     const res = await fetch(GET_URL + chat_id, {
@@ -488,6 +502,7 @@ const getChat = async (chat_id, setLastSeen) => {
     });
     const data = await res.json();
     setLastSeen(data.lastSeen);
+    setSettings(data.settings);
     return data.chat;
   } catch (err) {
     console.log(err);

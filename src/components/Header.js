@@ -28,9 +28,9 @@ export const Header = (props) => {
           </button>
           <div className={navToggle+" top-nav w-full lg:inline-flex lg:flex-grow lg:w-auto"} id="navigation"  onClick={()=>navToggler()}>
             <div className="lg:inline-flex lg:flex-row lg:ml-auto flex flex-col">
-              <NavLink to={process.env.PUBLIC_URL + "/"} className="lg:inline-flex lg:w-auto px-3 py-2 rounded font-medium text-light-101 hover:text-dark-801 hover:bg-primary-101">
+              {/* <NavLink to={process.env.PUBLIC_URL + "/"} className="lg:inline-flex lg:w-auto px-3 py-2 rounded font-medium text-light-101 hover:text-dark-801 hover:bg-primary-101">
                 <span>Home</span>
-              </NavLink>
+              </NavLink> */}
               <NavLink  to={process.env.PUBLIC_URL + "/inbox/"} params={{ data: props.user_name }} className="lg:inline-flex lg:w-auto px-3 py-2 rounded font-medium text-light-101 hover:text-dark-801 hover:bg-primary-101">
                 <span>Inbox</span>
               </NavLink>

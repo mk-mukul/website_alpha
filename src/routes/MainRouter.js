@@ -5,17 +5,23 @@ import LoginRouter from "./LoginRouter";
 
 export const MainRouter = () => {
   const token = Cookies.get("token");
-
+  let querry = window.location.search.split("?").slice(1, 2).join();
   return (
     <>
-      {token ? (
-        <>
-          <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
-          <LoginRouter token={token} />
-        </>
+      {querry ? (
+        <Redirect to={process.env.PUBLIC_URL + querry} />
       ) : (
         <>
-          <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
+          {token ? (
+            <>
+              <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
+              <LoginRouter token={token} />
+            </>
+          ) : (
+            <>
+              <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
+            </>
+          )}
         </>
       )}
     </>

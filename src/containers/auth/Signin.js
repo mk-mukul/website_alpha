@@ -89,6 +89,14 @@ export default class Signin extends React.Component {
                       }
                     />
                   </div>
+                  <div className="text-sm flex flex-row-reverse text-light-101">
+                    <Link
+                      className="hover:text-blue-800 font-medium"
+                      to={process.env.PUBLIC_URL + "/changePassword/"}
+                    >
+                      Forgot password ??
+                    </Link>
+                  </div>
                   <div className="w-full">
                     <button
                       className="w-full mt-4 p-0 bg-background-401 text-light-101"

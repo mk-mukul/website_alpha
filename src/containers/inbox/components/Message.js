@@ -82,7 +82,7 @@ export const Message = (props) => {
             <></>
           ) : (
             <div
-              className="flex cursor-pointer text-white opacity-10 hover:opacity-80 flex-col mx-1 justify-center"
+              className="flex cursor-pointer text-white opacity-30 hover:opacity-80 flex-col mx-1 justify-center"
               onClick={() => {
                 props.selectMsg(props.data);
               }}

@@ -5,10 +5,10 @@ import { Friend } from "./components/Friend";
 import { ChatWindow } from "./components/ChatWindow";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
-import LogoutIcon from "@mui/icons-material/Logout";
+// import LogoutIcon from "@mui/icons-material/Logout";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+// import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+// import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import message_in from "../assets/sounds/message_in.mp3";
 
 const URL = process.env.REACT_APP_SERVER;
@@ -21,7 +21,11 @@ export const Inbox = (props) => {
   const [friends, setFriends] = useState(props.user.chats_id);
   // const [inMsg, setInMsg] = useState(null);
   const [getMessage, setGetMessage] = useState(null);
-  const [playSound, setPlaySound] = useState(props.user.settings.notificationSound);
+  const [playSound, setPlaySound] = useState(
+    props.user.settings.notificationSound
+  );
+  const [showTyping, setShowTyping] = useState(props.user.settings.showTyping);
+
   const [isOptions, setIsOptions] = useState(false);
 
   const [seenData, setSeenData] = useState(null);
@@ -152,8 +156,8 @@ export const Inbox = (props) => {
     }
   };
 
-  const logout = () => {
-    Cookies.remove("token");
+  const logout = async () => {
+    await Cookies.remove("token");
     window.location.reload();
   };
 
@@ -169,8 +173,13 @@ export const Inbox = (props) => {
 
   const updateSoundSetting = () => {
     updateSeetings("notificationSound", !playSound);
-    setPlaySound(!playSound)
-  }
+    setPlaySound(!playSound);
+  };
+  const updateShowTypingSetting = async () => {
+    await updateSeetings("showTyping", !showTyping);
+    setShowTyping(!showTyping);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -198,32 +207,37 @@ export const Inbox = (props) => {
                 >
                   <MoreVertIcon />
                 </div>
-
-                <div className={isOptions ? "absolute" : "hidden"}>
-                  {isOptions ? (
-                    <>
-                      <div className="relative grid p-3 gap-1 right-3 rounded-sm bg-background-801" >
-                        <div className="flex" onClick={() => { updateSoundSetting() }}>
-                          {playSound ?
-                            <><VolumeUpIcon /></>
-                            :
-                            <><VolumeOffIcon /></>
-                          }
-                        </div>
-                        <Link to={process.env.PUBLIC_URL + "/"}>
-                          <LogoutIcon
-                            className="cursor-pointer"
-                            onClick={() => logout()}
-                          />
-                        </Link>
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </div>
               </div>
             </div>
+            {isOptions ? (
+              <>
+                <div className="cursor-pointer text-light-101 grid p-3 gap-3 right-12 rounded-sm bg-background-801">
+                  <div
+                    className="flex"
+                    onClick={() => {
+                      updateSoundSetting();
+                    }}
+                  >
+                    {playSound ? <>Mute</> : <>Unmute</>}
+                  </div>
+                  <div
+                    className="flex"
+                    onClick={() => {
+                      updateShowTypingSetting();
+                    }}
+                  >
+                    {showTyping ? <>Live Typing on</> : <>Live Typing off</>}
+                  </div>
+                  <Link to={process.env.PUBLIC_URL + "/"}>
+                    <div className="cursor-pointer" onClick={() => logout()}>
+                      Logout
+                    </div>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
 
             <div className="overflow-y-auto w-screen sm:w-60">
               {friends ? (
@@ -329,8 +343,8 @@ const sortTime = (chats_id) => {
       return a.lastMsg.time < b.lastMsg.time
         ? 1
         : b.lastMsg.time < a.lastMsg.time
-          ? -1
-          : 0;
+        ? -1
+        : 0;
     } else if (a.lastMsg && !b.lastMsg) {
       return -1;
     } else if (!a.lastMsg && b.lastMsg) {
@@ -371,7 +385,7 @@ const updateSeetings = async (setting, value) => {
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: JSON.stringify({setting, value}),
+      body: JSON.stringify({ setting, value }),
     });
     // const result = await res.json();
     // console.log(res);
@@ -379,4 +393,4 @@ const updateSeetings = async (setting, value) => {
     console.log(err);
     alert("Something went wrong, Please Refress the page");
   }
-}
+};

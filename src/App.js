@@ -15,6 +15,8 @@ import Signup from "./containers/auth/Signup";
 import LinkWebsite from "./containers/public/LinkWebsite";
 import { VerificationId } from "./containers/auth/VerificationId";
 import { Verification } from "./containers/auth/Verification";
+import { ChangePassword } from "./containers/auth/ChangePassword";
+import { ChangePasswordId } from "./containers/auth/ChangePasswordId";
 
 export const App = () => {
   let querry = window.location.search.split("?").slice(1, 2).join();
@@ -58,11 +60,33 @@ export const App = () => {
           />
           <Route
             exact
+            path={process.env.PUBLIC_URL + "/changePassword/"}
+            render={() => {
+              return (
+                <>
+                  <ChangePassword />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
             path={process.env.PUBLIC_URL + "/verification/:id"}
             render={(props) => {
               return (
                 <>
                   <VerificationId id={props.match.params.id} />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/changePassword/:id"}
+            render={(props) => {
+              return (
+                <>
+                  <ChangePasswordId id={props.match.params.id} />
                 </>
               );
             }}

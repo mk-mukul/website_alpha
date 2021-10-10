@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 
-const url = process.env.REACT_APP_SERVER + "/verification/";
+const url = process.env.REACT_APP_SERVER + "/changePassword/";
 
-export const Verification = (props) => {
-  const [email, setEmail] = useState("");
+export const ChangePasswordId = (props) => {
+  const [password, setPassword] = useState("");
   const inputRef = React.createRef();
   const [status, setStatus] = useState(false);
 
   const submit = async () => {
     try {
-      const res = await fetch(url, {
+      const res = await fetch(url+props.id, {
         // login
         method: "POST",
         headers: {
@@ -18,7 +18,7 @@ export const Verification = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          password: password,
         }),
       });
       const data = await res.json();
@@ -28,6 +28,7 @@ export const Verification = (props) => {
       } else {
         alert(data.error);
       }
+      console.log(data);
     } catch (err) {
       console.log(err);
       alert("Invalid Link");
@@ -40,7 +41,11 @@ export const Verification = (props) => {
 
   return (
     <>
-      {status ? <Redirect to={process.env.PUBLIC_URL + "/inbox/"} /> : ""}
+      {status ? (
+        <Redirect to={process.env.PUBLIC_URL + "/inbox/"} />
+      ) : (
+        <></>
+      )}
       <section className="pt-4 pb-4 min-h-screen flex justify-center items-center text-light-101 bg-background-101">
         <div className="flex items-center w-56 flex-col">
           <div className="grid gap-2 w-full bg-background-201 text-dark-901 px-3 py-6 rounded-md shadow-xl">
@@ -48,11 +53,11 @@ export const Verification = (props) => {
               <input
                 className="py-1 w-full px-2 rounded-md bg-light-101 focus:border-light-201"
                 type="text"
-                placeholder=" Email"
+                placeholder=" Password"
                 ref={inputRef}
-                value={email}
+                value={password}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setPassword(e.target.value);
                 }}
               />
             </div>
@@ -63,7 +68,7 @@ export const Verification = (props) => {
                   submit();
                 }}
               >
-                Send Verification link
+                Submit Password
               </button>
             </div>
           </div>

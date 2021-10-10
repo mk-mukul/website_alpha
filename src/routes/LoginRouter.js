@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Profile } from "../containers/profile/Profile";
-import { Home } from "../containers/home/Home";
-import { AddLinks } from "../containers/addLink/AddLink";
+// import { Home } from "../containers/home/Home";
+// import { AddLinks } from "../containers/addLink/AddLink";
 import { Inbox } from "../containers/inbox/Inbox";
 import { Loading } from "../components/Loading";
 
@@ -69,7 +69,7 @@ const UserFound = (props) => {
             return (
               <>
                 <Switch>
-                  <Route
+                  {/* <Route
                     exact
                     path={process.env.PUBLIC_URL + "/"}
                     render={() => {
@@ -79,8 +79,8 @@ const UserFound = (props) => {
                         </>
                       );
                     }}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     exact
                     path={process.env.PUBLIC_URL + "/links/"}
                     render={() => {
@@ -90,7 +90,7 @@ const UserFound = (props) => {
                         </>
                       );
                     }}
-                  />
+                  /> */}
                   <Route
                     exact
                     path={process.env.PUBLIC_URL + "/profile/"}
