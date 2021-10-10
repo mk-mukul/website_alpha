@@ -53,6 +53,7 @@ export const ChatWindow = (props) => {
         setLastSeen(null);
         setSelectedMsg(null);
         setMsg("");
+        setInMsg(null);
         setMsgLive({
           from_user_name: "",
           message: "",
@@ -180,8 +181,8 @@ export const ChatWindow = (props) => {
     ) {
       if (!unMounted) {
         setMeassages((prev) => [inMsg, ...prev]);
+        setInMsg(null);
       }
-      setInMsg(null);
       socket.current.emit("seen", {
         from_user_name: userName,
         to_user_name: currentChat,
@@ -199,6 +200,7 @@ export const ChatWindow = (props) => {
         from: "live",
       });
     }
+    setInMsg(null);
     return () => {
       unMounted = true;
     };
@@ -532,6 +534,6 @@ const updateChat = async (to_user_name, message) => {
     // console.log(res);
   } catch (err) {
     console.log(err);
-    alert("Something went wrong, Please Refress the page");
+    // alert("Something went wrong, Please Refress the page");
   }
 };

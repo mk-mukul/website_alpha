@@ -391,6 +391,6 @@ const updateSeetings = async (setting, value) => {
     // console.log(res);
   } catch (err) {
     console.log(err);
-    alert("Something went wrong, Please Refress the page");
+    // alert("Something went wrong, Please Refress the page");
   }
 };
