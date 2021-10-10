@@ -41,7 +41,7 @@ export default class Signup extends React.Component {
       const data = await res.json();
       if (data.token) {
         // alert("account created please login");
-        swal("Account created", "Please Login", "success");
+        swal("Account created, Please Verify", "We have sent you an verification link on your email please verify and then login", "success");
         this.setState({
           name: "",
           user_name: "",

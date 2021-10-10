@@ -6,7 +6,7 @@ const URL = process.env.REACT_APP_SERVER + "/signin";
 
 export default class Signin extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       islogin: false,
       data: null,
@@ -68,7 +68,9 @@ export default class Signin extends React.Component {
                         this.setState({ user_name: e.target.value });
                       }}
                       onKeyDownCapture={(e) =>
-                        e.key === "Enter" ? this.inputPasswordRef.current.focus() : null
+                        e.key === "Enter"
+                          ? this.inputPasswordRef.current.focus()
+                          : null
                       }
                     />
                   </div>
@@ -88,7 +90,8 @@ export default class Signin extends React.Component {
                     />
                   </div>
                   <div className="w-full">
-                    <button className="w-full mt-4 p-0 bg-background-401 text-light-101"
+                    <button
+                      className="w-full mt-4 p-0 bg-background-401 text-light-101"
                       onClick={() => {
                         this.submit();
                       }}
@@ -104,6 +107,14 @@ export default class Signin extends React.Component {
                     to={process.env.PUBLIC_URL + "/signup/"}
                   >
                     Sign Up
+                  </Link>
+                </div>
+                <div className="text-sm text-light-101 mt-4">
+                  <Link
+                    className="hover:text-blue-800 font-medium"
+                    to={process.env.PUBLIC_URL + "/verification/"}
+                  >
+                    Resend Verification Link
                   </Link>
                 </div>
               </div>

@@ -13,6 +13,8 @@ import { MainRouter } from "./routes/MainRouter";
 import Signin from "./containers/auth/Signin";
 import Signup from "./containers/auth/Signup";
 import LinkWebsite from "./containers/public/LinkWebsite";
+import { VerificationId } from "./containers/auth/VerificationId";
+import { Verification } from "./containers/auth/Verification";
 
 export const App = () => {
   let querry = window.location.search.split("?").slice(1, 2).join();
@@ -39,6 +41,28 @@ export const App = () => {
               return (
                 <>
                   <LinkWebsite id={props.match.params.id} />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/verification/"}
+            render={() => {
+              return (
+                <>
+                  <Verification />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/verification/:id"}
+            render={(props) => {
+              return (
+                <>
+                  <VerificationId id={props.match.params.id} />
                 </>
               );
             }}
