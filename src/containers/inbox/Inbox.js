@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 // import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 // import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import message_in from "../assets/sounds/message_in.mp3";
+import message_in from "../../assets/sounds/message_in.mp3";
 
 const URL = process.env.REACT_APP_SERVER;
 const GET_URL = process.env.REACT_APP_SERVER + "/add/chats";
@@ -228,11 +228,9 @@ export const Inbox = (props) => {
                   >
                     {showTyping ? <>Live Typing on</> : <>Live Typing off</>}
                   </div>
-                  <Link to={process.env.PUBLIC_URL + "/"}>
-                    <div className="cursor-pointer" onClick={() => logout()}>
-                      Logout
-                    </div>
-                  </Link>
+                  <div className="cursor-pointer" onClick={() => logout()}>
+                    Logout
+                  </div>
                 </div>
               </>
             ) : (

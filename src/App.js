@@ -17,6 +17,7 @@ import { VerificationId } from "./containers/auth/VerificationId";
 import { Verification } from "./containers/auth/Verification";
 import { ChangePassword } from "./containers/auth/ChangePassword";
 import { ChangePasswordId } from "./containers/auth/ChangePasswordId";
+import { Index } from "./containers/home/Index";
 
 export const App = () => {
   let querry = window.location.search.split("?").slice(1, 2).join();
@@ -26,6 +27,11 @@ export const App = () => {
       <Router>
         {querry ? <Redirect to={process.env.PUBLIC_URL + querry} /> : <></>}
         <Switch>
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + "/"}
+            component={Index}
+          />
           <Route
             exact
             path={process.env.PUBLIC_URL + "/signin/"}

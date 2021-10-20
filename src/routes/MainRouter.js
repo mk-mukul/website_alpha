@@ -19,7 +19,7 @@ export const MainRouter = () => {
             </>
           ) : (
             <>
-              <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
+              <Redirect to={process.env.PUBLIC_URL + "/"} />
             </>
           )}
         </>

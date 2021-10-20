@@ -48,7 +48,7 @@ export default class LoginRouter extends React.Component {
             {this.state.status === 200 ? (
               <UserFound data={this.state.data} token={this.props.token} />
             ) : (
-              <Redirect to={process.env.PUBLIC_URL + "/signin/"} />
+              <Redirect to={process.env.PUBLIC_URL + "/"} />
             )}
           </>
         )}
