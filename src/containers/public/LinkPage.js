@@ -20,10 +20,10 @@ export const LinkPage = (props) => {
                 </header>
                 <section className="body">
                     <div className="color_code">
-                        <h5 className="live">Running...</h5>
-                        <h5 className="leftToday">Left</h5>
-                        <h5 className="today_class">Todays Class</h5>
-                        <h5 className="status">Not for Today</h5>
+                        <h5 className="live text-xs">Running...</h5>
+                        <h5 className="leftToday text-xs">Left</h5>
+                        <h5 className="today_class text-xs">Todays Class</h5>
+                        <h5 className="status text-xs">Not for Today</h5>
                     </div>
                     <h2>Semester 3</h2>
 
@@ -80,7 +80,7 @@ export const LinkPage = (props) => {
 const CourseCard = (props) => {
     return (<>
         <div className={props.class}>
-            <h3>{props.data.course}</h3>
+            <h3 className="text-lg">{props.data.course}</h3>
             {
                 props.data.time.map((val, ind) => {
                     return (
@@ -98,7 +98,7 @@ const CourseCard = (props) => {
 const Timing = (props) => {
     return (
         <>
-            <h4 className="time">{props.data.time}</h4>
+            <h4 className="time text-base">{props.data.time}</h4>
             {
                 props.data.section.map((val, ind) => {
                     return (
@@ -115,7 +115,7 @@ const Timing = (props) => {
 
 const ClassLink = (props) => {
     return (<>
-        <h5>
+        <h5 className="text-sm">
             <a href={props.data.link} target="blank">{props.data.section}</a>
         </h5>
     </>)

@@ -39,7 +39,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding-bottom: .2rem;
+    padding-bottom: 0rem;
 }
 
 #link-page .color_code h5 {
@@ -69,8 +69,8 @@
 #link-page .course {
     min-width: 28%;
     border-radius: 10px;
-    margin: 1rem .5rem;
-    padding: 1rem .5rem;
+    margin: .5rem;
+    padding: .5rem;
     display: grid;
     grid-auto-rows: min-content;
     justify-items: center;
@@ -102,19 +102,19 @@
 }
 
 #link-page h2 {
-    margin: 1rem 0 .3rem;
+    margin: 0.4rem 0 0rem;
 }
 
 #link-page h3 {
-    margin: 0 1rem;
+    /* margin: 0 0.5rem; */
 }
 
 #link-page h4 {
-    margin: 1rem 1rem .6rem;
+    margin: 0.4rem 1rem .1rem;
 }
 
 #link-page h5 {
-    margin: .5rem 1rem;
+    margin: .2rem .6rem;
 }
 
 #link-page a {
