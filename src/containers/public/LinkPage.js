@@ -115,7 +115,7 @@ const Timing = (props) => {
 
 const ClassLink = (props) => {
     return (<>
-        <h5 className="text-sm">
+        <h5 className="text-sm font-medium">
             <a href={props.data.link} target="blank">{props.data.section}</a>
         </h5>
     </>)
