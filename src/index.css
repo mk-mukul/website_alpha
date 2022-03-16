@@ -5,6 +5,9 @@
 
 /* base style */
 @layer base{
+    /* #html{
+        @apply text-base
+    } */
     #root{
         @apply min-h-screen
     }

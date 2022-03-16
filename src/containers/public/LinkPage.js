@@ -25,7 +25,7 @@ export const LinkPage = (props) => {
                         <h5 className="today_class text-xs">Todays Class</h5>
                         <h5 className="status text-xs">Not for Today</h5>
                     </div>
-                    <h2>Semester 3</h2>
+                    <h2>Semester 4</h2>
 
                     <h2 className="running">No Class is Running Now </h2>
                     <div className="card-container">
