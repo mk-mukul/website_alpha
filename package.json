@@ -2,7 +2,10 @@
   "homepage": "https://mk-mukul.github.io/website_alpha/",
   "name": "website-alpha",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@mk-mukul"
+  },
   "dependencies": {
     "@craco/craco": "^6.3.0",
     "@emotion/react": "^11.4.1",
